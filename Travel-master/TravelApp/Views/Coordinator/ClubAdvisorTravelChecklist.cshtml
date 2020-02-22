@@ -1,0 +1,68 @@
+﻿@model TravelApp.Models.SignatureFormViewModel
+@{
+    ViewData["Title"] = "Coordinator Travel Checklist";
+    Layout = "_Layout";
+}
+
+<div class="jumbotron text-center yesPrint">
+    <h2>Coordinator Travel Checklist</h2>
+</div>
+<div class="subNav">
+    <div class="container">
+        <a asp-action="CoordinatorDocsListView" class="btn btn-outline-primary noPrint back-btn"><i class="fas fa-arrow-left"></i> </a>
+        <form method="post">
+            <button type="button" class="btn btn-success noPrint subNav-btn" onclick="print()">Print</button>
+
+        </form>
+
+    </div>
+</div>
+<div class="container yesPrint">
+    <h3>Three weeks before departure:</h3>
+    <form class="yesPrint" method="post">
+        <ul>
+
+            <li><input type="checkbox" class="form-check-input" /> Travel Request Form OR email from direct supervisor for in state travel. Travel Request Form required for out of state travel (instructions provided on top of form)</li>
+
+            <li>
+                <input type="checkbox" class="form-check-input" /> Club Funding – Trip/Conference Form
+            </li>
+
+            <li>
+                <input type="checkbox" class="form-check-input" /> One Field Trip Form per trip (signed by Assoc. Dean or Dept. Head) Out of state must be signed by Dean
+            </li>
+
+            <li>
+                <input type="checkbox" class="form-check-input" /> Conference Agenda
+            </li>
+            <li>
+                <input type="checkbox" class="form-check-input" /> Release of Liability for every chaperone and student (trip specific)
+            </li>
+            <li>
+                <input type="checkbox" class="form-check-input" /> 	Code of Conduct for every student for each trip (trip specific)
+            </li>
+
+            <li>
+                <input type="checkbox" class="form-check-input" /> Vehicle rental approval – email from Assoc. Dean and Dean acceptable
+            </li>
+        </ul>
+    </form>
+    <h4>All above documentation is to be submitted in one complete packet to Janet Rake in Student Life, Room C-121.  Individual forms will not be processed until all required documentation has been received.</h4>
+    <h3>Post travel:</h3>
+    <form class="yesPrint" method="post">
+        <ul>
+            <li> <input type="checkbox" class="form-check-input" /> Completed WCTC Employee Expense Report Signed by Advisor and Assoc. Dean (must be signed by Dean if out of state) – Use current template, July 1, 2018 found under Resources > Forms on Portal.  All travel expenses are required to be reconciled whether prepaid or out of pocket. Only employee expenses are reflected on the expense report. Do not include any expenses that were paid for students.</li>
+            <li><input type="checkbox" class="form-check-input" /> Copy of Travel Request Form OR email from direct supervisor, Field Trip Form and Conference Agenda from above submission prior to travel.</li>
+            <li> <input type="checkbox" class="form-check-input" /> 	All supporting receipts – original receipts are to be submitted whenever possible (exception is when the original accompanies your USBank Stmt) Hotel receipts need to be original detailed receipts, not pre-booked confirmation.  We are tax exempt in the State of Wisconsin.  Additional Tax Exempt documentation for other states can be found by going to the WCTC Portal, Resources > Departments > Financial Accounting.  Remember to use the Sales And Use Tax Certificate of Exempt Status (Blackboard). </li>
+            <li><input type="checkbox" class="form-check-input" /> 	If travel involves more than one advisor, each Expense Report must have all supporting documentation attached at time of submission to Student Development.  One set of supporting documentation will not suffice for multiple Expense Reports.  If additional copies need to be made, club account will be charged.</li>
+        </ul>
+    </form>
+    <br />
+    <div>
+        <hr />
+        <p class="font-weight-bold noPrint">
+            Finish the above items. <br />This document does not need to be submitted, but can be used as a reference to finish the required steps.
+        </p>
+    </div>
+</div>
+

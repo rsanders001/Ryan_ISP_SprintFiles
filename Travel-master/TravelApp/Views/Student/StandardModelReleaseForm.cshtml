@@ -1,0 +1,118 @@
+﻿@model TravelApp.Models.SignatureFormViewModel
+@{
+    ViewData["Title"] = "Standard Model Release Form";
+    Layout = "_Layout";
+}
+
+<div class="jumbotron text-center yesPrint">
+    <h1>@Model.Trip.TripName</h1>
+    <h2>STANDARD MODEL RELEASE FORM</h2>
+</div>
+<form method="post">
+    <div class="subNav">
+        <div class="container">
+
+            <a asp-action="AcceptedTripDetail" asp-route-id="@Model.AppForm.ApplicationId" class="btn btn-outline-primary noPrint back-btn"><i class="fas fa-arrow-left"></i> </a>
+
+            <button type="submit" asp-action="PrintFormSubmit" asp-route-id="@Model.AppForm.ApplicationFormId" onclick="print()" class="btn btn-outline-primary noPrint subNav-btn">Print & Submit</button>
+        </div>
+    </div>
+    <div class="container yesPrint">
+        <p>
+            I hereby authorize and give full consent to Waukesha County Technical College to copyright or publish all photographs or video productions taken in which I,
+            @ViewBag.User.FirstName @ViewBag.User.LastName, appear.
+            I further agree that Waukesha County Technical College may use, and/or cause to be used, these photographs or video tapes for any and all exhibitions public displays, publication, commercial art and advertising purposes, without limitation or reservation or any compensation other than that receipt of which is hereby acknowledged.
+        </p>
+        <br />
+
+
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" name="ofAge" id="ofAge" onclick="adultAge()" />
+            <label for="ofAge" class="form-check-label">I am at least 18 years of age.</label>
+        </div>
+
+        <label>__________ I have read the Standard Model Release Form and agree to abide by these established rules</label>
+
+        <br />
+
+        <div class="row">
+            <div class="col-md-6 col-sm-12 mb-5">
+                <div class="table-responsive">
+                    <table class="table table-sm borderless">
+                        <thead>
+                            <tr class="d-flex">
+                                <th class="col-4"><u>Student</u></th>
+                                <td class="col-8">WCTCID @ViewBag.User.WctcID</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="d-flex">
+                                <th class="col-4">Name:</th>
+                                <td class="col-8">@ViewBag.User.FirstName @ViewBag.User.LastName</td>
+                            </tr>
+                            <tr class="d-flex">
+                                <th class="col-4">Signature:</th>
+                                <td class="col-8" style="border-bottom: solid thin !important;"></td>
+                            </tr>
+                            <tr class="d-flex">
+                                <th class="col-4">Date:</th>
+                                <td class="col-8">@ViewBag.Today</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12 mb-5" id="adultSig">
+                <div class="table-responsive">
+                    <table class="table table-sm borderless">
+                        <thead>
+                            <tr class="d-flex">
+                                <th class="col-4"><u>Parent / Guardian</u></th>
+                                <td class="col-8">Required if under 18</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="d-flex">
+                                <th class="col-4">Print Name:</th>
+                                <td class="col-8" style="border-bottom: solid thin !important;"></td>
+                            </tr>
+                            <tr class="d-flex">
+                                <th class="col-4">Signature:</th>
+                                <td class="col-8" style="border-bottom: solid thin !important;"></td>
+                            </tr>
+                            <tr class="d-flex">
+                                <th class="col-4">Date:</th>
+                                <td class="col-8">@ViewBag.Today</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <p class="font-weight-bold noPrint">
+            Please print this document and deliver the signed physical copy to your trip's coordinator.
+        </p>
+    </div>
+</form>
+
+
+<script>
+    //function for toggling adult signature field
+    function adultAge() {
+        // Get the checkbox
+        var ofAge = document.getElementById("ofAge");
+        // Get the div to display
+        var adultSig = document.getElementById("adultSig");
+
+        // If the checkbox is checked, display the output div and change classes
+        if (ofAge.checked == true) {
+            adultSig.style.display = "none";
+            adultSig.className = "col-md-6 col-sm-12 mb-5 font-weight-bold noPrint";
+        }
+        else {
+            adultSig.style.display = "block";
+            adultSig.className = "col-md-6 col-sm-12 mb-5 font-weight-bold yesPrint";
+        }
+    }
+</script>

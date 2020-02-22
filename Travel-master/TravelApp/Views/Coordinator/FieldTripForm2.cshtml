@@ -1,0 +1,222 @@
+﻿@model TravelApp.Models.FieldtripFormViewModel
+
+
+@{
+    ViewData["Title"] = "Field Trip Form";
+    Layout = "_Layout";
+}
+
+<div class="jumbotron text-center">
+
+    <h1>@Model.Trip.TripName</h1>
+    <h2>Field Trip Form</h2>
+</div>
+<div class="subNav">
+    <div class="container">
+        <a asp-action="CoordinatorDocsListView" class="btn btn-outline-primary noPrint back-btn"><i class="fas fa-arrow-left"></i> </a>
+        <form method="post">
+            <button type="button" class="btn btn-success noPrint subNav-btn" onclick="print()">Print</button>
+
+        </form>
+
+    </div>
+</div>
+<div class="container">
+
+    <div class="form-group noPrint">
+        <label for="exampleFormControlSelect1">Please choose this form's associated trip</label>
+        <select class="form-control" id="exampleFormControlSelect1">
+            @{
+                foreach (var trip in ViewBag.Trips)
+                {
+                    if (trip.CreatedBy == ViewBag.userId)
+                    {
+
+                        <option asp-controller="Coordinator" id="@trip.TripId">@trip.TripName</option>
+
+                    }
+                } }
+        </select>
+    </div>
+
+
+    <h4>Please scan or deliver this form, Release of Liability forms and any related documents required for your travel to Bruce Neumann in C-217J bneumann6@wctc.edu Thank you!</h4>
+    <ol>
+        <li> Include a list of participating students and chaperones AND a signed Release of Liability Form for each student and chaperone.  </li>
+        <li> This form must be filed with the Associate Dean fourteen days before the activity.</li>
+        <li> This form must be completed for any activity in which students leave the campus for instructional purposes. </li>
+        <li> If the trip conflicts with another scheduled class, the conflict must be cleared with the appropriate instructor. </li>
+        <li> Club Advisors:  Please deliver all documents to Jonathan Pedraza, C-121, per Club Advisor Travel Checklist.        </li>
+    </ol>
+
+    <div class="table-responsive">
+        <table class="table table-sm table-bordered">
+
+            <tbody>
+                <tr class="d-flex">
+                    <th class="col-4">Today's Date:</th>
+                    <td class="col-8">@(((DateTime)(ViewBag.Today)).ToString("MM/dd/yyyy"))</td>
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">Submitted By:</th>
+                    <td class="col-8">@ViewBag.FirstName @ViewBag.LastName</td>
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">Approved:</th>
+                    @if ((bool)(Model.Trip.TripApproved))
+                    {
+                        <td class="col-4">Yes</td>
+                    }
+                    else
+                    {
+                        <td class="col-4">No</td>
+                    }
+                </tr>
+                @if ((bool)(Model.Trip.TripApproved))
+                {
+                    <tr class="d-flex">
+                        <th class="col-4">Approved By:</th>
+                        <td class="col-8">(Associate Dean/Instructional Manager signature)</td>
+                    </tr>
+                }
+                <tr class="d-flex">
+                    <th class="col-4">Field Trip Date:</th>
+                    <td class="col-8">@(((DateTime)(Model.Trip.DateDeparting)).ToString("MM/dd/yyyy"))</td>
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">Educational Objective:</th>
+                    <td class="col-8">@Model.Trip.EducationalObjective</td>
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">Destination:</th>
+                    <td class="col-8">@Model.Destination.Name</td>
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">Activity Address:</th>
+                    <td class="col-8">@Model.Destination.AddressLine1<br />@Model.Destination.City @Model.Destination.State, @Model.Destination.PostalCode<br />@Model.Destination.Country</td>
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">Organizer/Instructor:</th>
+                    <td class="col-8">@ViewBag.firstcoordinator @ViewBag.lastcoordinator</td>
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">Teaching Substitute?</th>
+                    @if ((bool)(Model.Trip.TeachingSubNeeded))
+                    {
+                        <td class="col-8">Yes</td>
+                        <td class="col-8" id="ifNoHide">Number of Hours:  @Model.Trip.SubNoOfHours</td>
+                    }
+                    else
+                    {
+                        <td class="col-4">No</td>
+                    }
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">Course Number:</th>
+                    <td class="col-8">Not Saved in database</td>
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">CRN:</th>
+                    <td class="col-8">@Model.Course.Crn</td>
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">Course Title:</th>
+                    <td class="col-8">@Model.Course.CourseTitle</td>
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">Transportation:</th>
+                    <td class="col-8">Private Car Bus: Name of Rental Agency: WCTC Van Other</td>
+                    @* My thinking will be for this collumn in the future is that it will look at the transport table based off that ID and see the type
+            then that type will decide what type of info to put out. Without a transportation table created though I cannot guess to much more
+            There are forms however for these other things, So maybe we will just refrence those instead.
+                    *@
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">Time Departing:</th>
+                    <td class="col-8">@(((DateTime)(Model.Trip.DateDeparting)).ToString("MM/dd/yyyy"))</td>
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">Time Returning:</th>
+                    <td class="col-8">@(((DateTime)(Model.Trip.DateReturning)).ToString("MM/dd/yyyy"))</td>
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">Cost to District:</th>
+                    <td class="col-8">$@Model.Trip.CostToDistrict</td>
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">Funds Available?</th>
+                    @if ((bool)(Model.Trip.FundsAvailable))
+                    {
+                        <td class="col-4">Yes</td>
+                        <td class="col-4" id="ifNoHide">Account Number:  @Model.Trip.AccountNumber</td>
+                    }
+                    else
+                    {
+                        <td class="col-4">No</td>
+                    }
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">Names of Additional WCTC Personnel Participating:</th>
+                    <td class="col-8" contenteditable="true"></td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+    <form>
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" name="conflict" id="conflict" onclick="conflict()" />
+            <label for="conflict" class="form-check-label">This trip <b>will not</b> conflict with another scheduled course</label>
+        </div>
+    </form>
+    <div class="table-responsive" id="conflictTimeSig">
+        <table class="table table-bordered">
+            <thead>
+                <tr class="d-flex">
+                    <th class="col-4">Course Number</th>
+                    <th class="col-4">Time of Class</th>
+                    <th class="col-4">Instructor's Signature</th>
+                </tr>
+            </thead>
+            <tbody contenteditable="true">
+                <tr class="d-flex">
+                    <td class="col-4"></td>
+                    <td class="col-4"></td>
+                    <td class="col-4"></td>
+                </tr>
+                <tr class="d-flex">
+                    <td class="col-4"></td>
+                    <td class="col-4"></td>
+                    <td class="col-4"></td>
+                </tr>
+                <tr class="d-flex">
+                    <td class="col-4"></td>
+                    <td class="col-4"></td>
+                    <td class="col-4"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr />
+    <p>Attach a list of students participating </p>
+</div>
+
+<script>
+    // toggles course conflict table based on whether the trip will occur during a class
+    function conflict() {
+        // Get the checkbox
+        var con = document.getElementById("conflict");
+        // Get the div to display
+        var ctf = document.getElementById("conflictTimeSig");
+
+
+        // If the checkbox is checked, display the output div and change classes
+        if (con.checked == true) {
+            ctf.style.display = "none";
+        }
+        else {
+            ctf.style.display = "block";
+        }
+    }
+</script>
+

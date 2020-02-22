@@ -1,0 +1,178 @@
+﻿@using TravelApp.Models
+@model RoleEditModel
+@{
+    ViewData["Title"] = "Edit Roles";
+    Layout = "_Layout";
+}
+
+<div class="jumbotron jumbotron-fluid text-center">
+    <h1>Edit Role</h1>
+    <h2>@Model.Role.Name</h2>
+</div>
+<div class="subNav">
+    <div class="container">
+        <div class="row">
+            <a class="btn btn-outline-primary back-btn" asp-action="Index"> <i class="fas fa-arrow-left"></i> </a>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <div class="col-md-5 col-sm-10 mb-5">
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+                    </div>
+                    <input class="form-control subNav-btn" type="text" id="addSearchInput" onkeyup="addSearchFunction()" placeholder="Search Add...">
+                </div>
+            </div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <div class="col-md-5 col-sm-12 mb-5">
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+                    </div>
+                    <input class="form-control subNav-btn" type="text" id="removeSearchInput" onkeyup="removeSearchFunction()" placeholder="Search Remove...">
+                </div>
+            </div>
+
+        </div>
+        </div>
+</div>
+        <div class="container">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <form asp-action="Edit" method="post">
+                <input type="hidden" name="roleName" value="@Model.Role.Name" />
+                <input type="hidden" name="roleId" value="@Model.Role.Id" />
+
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 mb-5">
+                      
+                        <h3 class="bg-success p-1 text-white">Add To @Model.Role.Name</h3>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-striped table-hover" id="addTable">
+                                <thead>
+                                    <tr>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Email</th>
+                                        <th>Add</th>
+                                    </tr>
+                                </thead>
+                                @if (Model.NonMembers.Count() == 0)
+                                {
+                                    <tr><td colspan="4">All Users Are Members</td></tr>
+                                }
+                                else
+                                {
+                                    @foreach (AppUser user in Model.NonMembers)
+                                    {
+                                        <tr>
+                                            <td>@user.FirstName</td>
+                                            <td>@user.LastName</td>
+                                            <td>@user.Email</td>
+                                            <td>
+                                                <input type="checkbox" name="IdsToAdd" value="@user.Id" />
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-sm-12 mb-5">
+                        
+                        <h3 class="bg-danger p-1 text-white">Remove From @Model.Role.Name</h3>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-striped table-hover" id="removeTable">
+                                <thead>
+                                    <tr>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Email</th>
+                                        <th>Remove</th>
+                                    </tr>
+                                </thead>
+                                @if (Model.Members.Count() == 0)
+                                {
+                                    <tr><td colspan="2">No Users Are Members</td></tr>
+                                }
+                                else
+                                {
+                                    @foreach (AppUser user in Model.Members)
+                                    {
+                                        <tr>
+                                            <td>@user.FirstName</td>
+                                            <td>@user.LastName</td>
+                                            <td>@user.Email</td>
+                                            <td>
+                                                <input type="checkbox" name="IdsToDelete" value="@user.Id" />
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-outline-primary">Save</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+
+        <script>
+            function addSearchFunction() {
+                // Declare variables
+                var input, filter, table, tr, tdFname, tdLname, i, fNameValue, lNameValue, fullNameValue;
+                input = document.getElementById("addSearchInput");
+                filter = input.value.toUpperCase();
+                filter = filter.split(' ').join(''); //remove spaces
+                table = document.getElementById("addTable");
+                tr = table.getElementsByTagName("tr");
+
+                // Loop through all table rows, and hide those who don't match the search query
+                for (i = 0; i < tr.length; i++) {
+                    tdFname = tr[i].getElementsByTagName("td")[0]; //1st td in table row, which is first name
+                    tdLname = tr[i].getElementsByTagName("td")[1] //2nd td in table row, which is last name
+                    if (tdFname && tdLname) {
+                        fNameValue = tdFname.textContent || tdFname.innerText;
+                        lNameValue = tdLname.textContent || tdLname.innerText;
+                        fullNameValue = fNameValue + lNameValue;
+
+                        if (fNameValue.toUpperCase().indexOf(filter) > -1 || lNameValue.toUpperCase().indexOf(filter) > -1 || fullNameValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        }
+                        else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+
+            function removeSearchFunction() {
+                // Declare variables
+                var input, filter, table, tr, tdFname, tdLname, i, fNameValue, lNameValue, fullNameValue;
+                input = document.getElementById("removeSearchInput");
+                filter = input.value.toUpperCase();
+                filter = filter.split(' ').join(''); //remove spaces
+                table = document.getElementById("removeTable");
+                tr = table.getElementsByTagName("tr");
+
+                // Loop through all table rows, and hide those who don't match the search query
+                for (i = 0; i < tr.length; i++) {
+                    tdFname = tr[i].getElementsByTagName("td")[0]; //1st td in table row, which is first name
+                    tdLname = tr[i].getElementsByTagName("td")[1] //2nd td in table row, which is last name
+                    if (tdFname && tdLname) {
+                        fNameValue = tdFname.textContent || tdFname.innerText;
+                        lNameValue = tdLname.textContent || tdLname.innerText;
+                        fullNameValue = fNameValue + lNameValue;
+
+                        if (fNameValue.toUpperCase().indexOf(filter) > -1 || lNameValue.toUpperCase().indexOf(filter) > -1 || fullNameValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        }
+                        else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+        </script>

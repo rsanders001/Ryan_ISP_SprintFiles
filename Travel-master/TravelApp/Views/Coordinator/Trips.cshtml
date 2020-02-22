@@ -1,0 +1,57 @@
+﻿@model IEnumerable<TravelApp.Models.Trip>
+@{
+    ViewData["Title"] = "Current Trips";
+    Layout = "_Layout";
+}
+
+<div class="jumbotron text-center">
+    <h1>Trips Master List</h1>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-sm-12 mb-5">
+            <h3>My Trips</h3>
+            <ul class="bulletLess">
+                @{
+                    var count = 0;
+                    foreach (var trip in Model)
+                    {
+                        if (trip.CreatedBy == ViewBag.uid)
+                        {
+                            <li><a asp-controller="Coordinator" asp-action="TripDetail" asp-route-id="@trip.TripId">@trip.TripName</a></li>
+                            count++;
+                        }
+                    }
+                    if (count == 0)
+                    {
+                        <li>You have no trips! Create one <a asp-controller="Coordinator" asp-action="NewTrip">Here!</a></li>
+                    }
+                }
+            </ul>
+            <br />
+            <a asp-action="Index" class="btn btn-outline-primary">Back to Dashboard</a>
+        </div>
+
+        <div class="col-md-6 col-sm-12 mb-5">
+            <h3>Other Coordinator Trips</h3>
+            <ul class="bulletLess">
+                @{
+                    var count2 = 0;
+                    foreach (var trip in Model)
+                    {
+                        if (trip.CreatedBy != ViewBag.uid)
+                        {
+                            <li><a asp-controller="Coordinator" asp-action="TripDetail" asp-route-id="@trip.TripId">@trip.TripName</a></li>
+                            count2++;
+                        }
+                    }
+                    if (count2 == 0)
+                    {
+                        <li>No trips found</li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+</div>

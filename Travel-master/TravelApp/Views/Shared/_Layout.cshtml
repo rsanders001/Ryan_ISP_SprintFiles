@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="~/images/favicon.jpg" type="image/x-icon" />
+
+    <!-- Add script tags first -->
+    <!-- SOURCE: https://stackoverflow.com/questions/9271276/is-the-recommendation-to-include-css-before-javascript-invalid -->
+    <!-- Add jQuery, bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>*@
+
+
+
+    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"> DELETE UGH*@
+    <!--CSS -->
+    <!--Google Fonts-->
+    <!--Arvo-->
+    <link href="https://fonts.googleapis.com/css?family=Arvo" rel="stylesheet">
+    <!--FontAwesome-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+    <!--Bootstrap-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+    <!--Site CSS-->
+    <link href="~/css/site.css" rel="stylesheet" type="text/css">
+</head>
+@{
+    ViewData["Title"] = "_Layout";
+}
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <!--brand-->
+        <a href="/" class="navbar-brand"><img src="/images/pickNickLogo.png" height="73" width="215" alt="WCTC Travel Portal" /></a>
+        <!--toggler-->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <!--content, toggled-->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                @{
+                    if (User?.Identity?.IsAuthenticated ?? false)
+                    {
+                        if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item"><a asp-controller="Admin" asp-action="Index" class="nav-link"><i class="fas fa-cogs"></i> Admin</a></li>
+                            <li class="nav-item"><a asp-controller="Coordinator" asp-action="Index" class="nav-link"><i class="fas fa-map-marked-alt"></i> Coordinator</a></li>
+                            <li class="nav-item"><a asp-controller="Student" asp-action="Index" class="nav-link"><i class="fas fa-route"></i> Student</a></li>
+                        }
+                        else if (User.IsInRole("Coordinator"))
+                        {
+                            <li class="nav-item"><a asp-controller="Coordinator" asp-action="Index" class="nav-link"><i class="fas fa-map-marked-alt"></i> Coordinator</a></li>
+                            <li class="nav-item"><a asp-controller="Student" asp-action="Index" class="nav-link"><i class="fas fa-route"></i> Student</a></li>
+                        }
+                        else if (User.IsInRole("Student"))
+                        {
+                            <li class="nav-item"><a asp-controller="Student" asp-action="Index" class="nav-link"><i class="fas fa-route"></i> Student</a></li>
+                        }
+                    }
+                }
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                @if (User?.Identity?.IsAuthenticated ?? false)
+                {
+                    <li><a asp-controller="Account" asp-action="Logout" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                }
+                else
+                {
+                    <li><a asp-controller="Register" asp-action="Create" class="nav-link"><i class="fas fa-user-plus"></i> Register</a></li>
+                    <li><a asp-controller="Account" asp-action="Login" class="nav-link"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                }
+            </ul>
+        </div>
+    </nav>
+    @RenderBody()
+    <footer class="footer yesPrint">
+        <div class="container text-center">
+            <span class="text-muted">Pick-Nick © 2020</span>
+        </div>
+    </footer>
+</body>
+</html>

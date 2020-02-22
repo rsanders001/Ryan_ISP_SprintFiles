@@ -1,0 +1,220 @@
+ @model TravelApp.Models.StudentListViewModel
+@*@model TravelApp.Models.Trip*@
+
+@{
+    ViewData["Title"] = "Trip Detail";
+    Layout = "_Layout";
+}
+
+<div class="jumbotron text-center">
+    <h1>@Model.Trip.TripName</h1>
+</div>
+<div class="subNav">
+    <div class="container">
+        <a class="btn btn-outline-primary back-btn" asp-action="Index"> <i class="fas fa-arrow-left"></i> </a>
+        @if (ViewBag.IsCreator || ViewBag.IsAdmin)
+        {
+            <button class="btn btn btn-danger subNav-btn" data-toggle="modal" data-target="#confirm-delete">Delete Trip</button>
+        }
+        @if (DateTime.Compare(((DateTime)(Model.Trip.DateDeparting)), DateTime.Today) < 0)
+        {
+            <a class="btn btn-outline-primary subNav-btn" asp-controller="Coordinator" asp-route-id="@Model.Trip.TripId" asp-action="NewTrip">Recreate This Trip</a>
+        }
+
+    </div>
+
+</div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 col-sm-12 mb-5">
+                <h3>Details</h3>
+                <p>
+                    <strong>Destination: </strong>@ViewBag.Destination.Name<br />
+                    <strong>Departing: </strong>@Model.Trip.DateDeparting.Value.ToShortDateString()<br />
+                    <strong>Returning: </strong>@Model.Trip.DateReturning.Value.ToShortDateString()<br />
+                    <strong>CRN: </strong>@ViewBag.Course.Crn<br />
+                    <strong>Course: </strong>@ViewBag.Course.CourseTitle<br />
+                    <strong>Teaching Sub Needed: </strong>
+                    @{
+                        if (Model.Trip.TeachingSubNeeded == true)
+                        {
+                            <strong class="text-success">Yes</strong><br />
+                            <strong>Number of Hours: </strong>@Model.Trip.SubNoOfHours<br />
+                        }
+                        else
+                        {
+                            <strong style="color: red;">No</strong><br />
+                        }
+                    }
+                    <strong>Cost to District: </strong>$@Model.Trip.CostToDistrict.00<br />
+                    <strong>Funds Available: </strong>
+                    @{
+                        if (Model.Trip.FundsAvailable == true)
+                        {
+                            <strong style="color: green;">Yes</strong><br />
+                            <strong>Account Number: </strong>@Model.Trip.AccountNumber<br />
+                        }
+                        else
+                        {
+                            <strong style="color: red;">No</strong><br />
+                        }
+                    }
+                    <strong>Educational Objective: </strong>@Model.Trip.EducationalObjective
+                </p>
+                @* This is the field trip form *@
+                @*<!--<a class="btn btn-outline-primary" asp-controller="Coordinator" asp-action="FieldTripForm" asp-route-id="@Model.Trip.TripId">More Details</a>-->*@
+            </div>
+
+            <div class="col-md-9 col-sm-12 mb-5">
+
+                @if (Model.Apps == null || Model.Apps.Count() == 0)
+                {
+                  <h3 class="form-list-item">&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; No Applications Yet</h3>
+                  <p class="form-list-item">&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;<i>Make sure students are in-the-know about your trip!</i></p>
+                }
+                else
+                {
+                    <h3>Student Applications</h3>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Full Name</th>
+                                    <th scope="col">Email</th>
+                                    @if (ViewBag.IsCreator || ViewBag.IsAdmin)
+                                    {
+                                        <th scope="col">Status</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <!--THIS LOGIC SHOULD BE IN CONTROLLER-->
+                                @foreach (var user in Model.Users.OrderBy(n => n.LastName))
+                                {
+
+                                    <tr>
+                                        @if (ViewBag.IsCreator || ViewBag.IsAdmin)
+                                        {
+
+                                            <td><a asp-action="ReviewForms" asp-route-id="@Model.Apps.FirstOrDefault(a => a.StudentId == user.Id).ApplicationId">@user.FirstName @user.LastName</a></td>
+                                            <td>@user.Email</td>
+                                            <td>
+                                                @{
+                                                    int approved = 0;
+                                                    int denied = 0;
+                                                    int unsubmitted = 0;
+                                                    bool progress = false;
+                                                    @foreach (var appForm in Model.ApplicationForms.Where(af => af.Application.StudentId == user.Id))
+                                                    {
+                                                        @switch (appForm.FormStatusId)
+                                                        {
+                                                            case 1:
+                                                                unsubmitted++;
+                                                                break;
+                                                            case 2:
+                                                                progress = true;
+                                                                break;
+                                                            case 3:
+                                                                approved++;
+                                                                break;
+                                                            case 4:
+                                                                denied++;
+                                                                break;
+                                                        }
+                                                    }
+
+                                                    @if (progress)
+                                                    {
+                                                        <i class="text-warning" data-toggle="tooltip" data-placement="left" title="Action Needed"><i class="fas fa-exclamation-circle"></i></i>
+
+                                                    }
+                                                    else if (denied > 0)
+                                                    {
+                                                        <i class="text-danger" data-toggle="tooltip" data-placement="left" title="Rejected Forms"><i class="fas fa-ban"></i></i>
+                                                    }
+                                                    else if (unsubmitted > 0)
+                                                    {
+                                                        <i class="text-primary" data-toggle="tooltip" data-placement="left" title="Waiting on Form Submission"><i class="fas fa-spinner"></i></i>
+                                                    }
+                                                    else if (approved == Model.ApplicationForms.Count(af => af.Application.StudentId == user.Id))
+                                                    {
+                                                        <i class="text-success" data-toggle="tooltip" data-placement="left" title="All Forms Approved"><i class="fas fa-check"></i></i>
+                                                    }
+
+                                                    else
+                                                    {
+                                                        <span class="text-danger">Not working</span>
+                                                    }
+                                                }
+                                                <span style="text-indent: 20px"></span>
+                                                @try
+                                                {
+
+                                                    @if ((Model.Payment.FirstOrDefault(p => p.StudentId == user.Id).PaymentConfirmed) == true)
+                                                    {
+                                                        <i class="text-success" data-toggle="tooltip" data-placement="left" title="Payment Confirmed"><i class="fas fa-dollar-sign"></i></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="text-danger" data-toggle="tooltip" data-placement="left" title="Missing Payment"><i class="fas fa-dollar-sign"></i></i>
+                                                    }
+                                                }
+                                                catch
+                                                {
+                                                    <i class="text-danger" data-toggle="tooltip" data-placement="left" title="Payment Not Approved"><i class="fas fa-dollar-sign"></i></i>
+                                                }
+                                                &nbsp;&nbsp;
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td> @user.FirstName @user.LastName </td>
+                                            <td> @user.Email </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+
+            <div class="col-sm-12 mb-5">
+                <h3>Post Travel</h3>
+                <ul>
+                    <li>Completed WCTC Employee Expense Report Signed by Advisor and Assoc. Dean (must be signed by Dean if out of state) – Use current template, July 1, 2018 found under Resources > Forms on Portal.  All travel expenses are required to be reconciled whether prepaid or out of pocket. Only employee expenses are reflected on the expense report. Do not include any expenses that were paid for students.</li>
+                    <li>Copy of Travel Request Form OR email from direct supervisor, Field Trip Form and Conference Agenda from above submission prior to travel.</li>
+                    <li>All supporting receipts – original receipts are to be submitted whenever possible (exception is when the original accompanies your USBank Stmt) Hotel receipts need to be original detailed receipts, not pre-booked confirmation.  We are tax exempt in the State of Wisconsin.  Additional Tax Exempt documentation for other states can be found by going to the WCTC Portal, Resources > Departments > Financial Accounting.  Remember to use the Sales And Use Tax Certificate of Exempt Status (Blackboard).</li>
+                    <li>If travel involves more than one advisor, each Expense Report must have all supporting documentation attached at time of submission to Student Development.  One set of supporting documentation will not suffice for multiple Expense Reports.  If additional copies need to be made, club account will be charged.</li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!-- confirm delete modal -->
+        <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="Confirm Delete" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="confirmDelete">Confirm Delete</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>You are about to delete the <b>@Model.Trip.TripName</b> trip, this procedure is irreversible.</p>
+                        <p>Do you want to proceed?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-danger" asp-action="DeleteTrip" asp-route-id="@Model.Trip.TripId">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function(){
+          $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>

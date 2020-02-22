@@ -1,0 +1,222 @@
+@model TravelApp.Models.ReviewFormsViewModel
+@{
+    ViewData["Title"] = "Review Forms";
+    Layout = "_Layout";
+}
+
+<div class="jumbotron text-center">
+    <h1>Review Details for @ViewBag.User</h1>
+    <h2>@ViewBag.Trip.TripName</h2>
+</div>
+<div class="subNav">
+    <div class="container">
+        <a class="btn btn-outline-primary back-btn" asp-action="TripDetail" asp-route-id="@ViewBag.Trip.TripId"> <i class="fas fa-arrow-left"></i> </a>
+        <button type="button" id="denyBtn" onclick="addAppFormId(@Model.App.ApplicationId)" class="btn btn-danger subNav-btn"><span>Deny Student</span></button>
+        @try
+        {
+            @if ((Model.Pay.PaymentConfirmed))
+            {
+                <span class="approved" style="float: right; margin-right: 15px;">
+                    <i class="text-success" data-toggle="tooltip" data-placement="left" title="Payment Confirmed"><i class="fas fa-dollar-sign fa-2x"></i></i>
+                </span>
+            }
+            else
+            {
+                    <a asp-action="ConfirmPayment" asp-route-id="@Model.App.ApplicationId" class="btn btn-outline-primary subNav-btn">Confirm Payment</a>
+            }
+        }
+        catch
+        {
+                <a asp-action="CreatePayment" asp-route-id="@Model.App.ApplicationId" class="btn btn-outline-primary subNav-btn">Confirm Payment</a>
+        }
+
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="text-left col-md-6 col-sm-12 mb-5">
+            <h3>Student Details</h3>
+            <p><b>Name: </b>@ViewBag.User</p>
+            <p><b>Age: </b>23</p>
+            <p><b>Gender: </b>@ViewBag.Gender</p>
+            <p><b>Phone: </b>@ViewBag.Phone</p>
+            <p><b>Email: </b>@ViewBag.Email</p>
+            <p><b>Program: </b>Web & Software</p>
+            <p><b>GPA: </b>@Model.App.Gpa</p>
+
+            <br />
+            <h3> Rationale</h3>
+            <p>@Model.App.Rationale</p>
+        </div>
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+        <div class="text-left col-md-5 col-sm-11 mb-4">
+            <h3>Application Forms</h3>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th scope="col">&nbsp;&nbsp;Form</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var appForm in Model.AppForms)
+                    {
+                    <tr>
+                        <td>&nbsp;&nbsp;@appForm.Form.Name</td>
+
+                        @switch (appForm.FormStatusId)
+                        {
+                            case 1:
+                                <td>Unsubmitted</td>
+                                break;
+                            case 2:
+                                <td class="dropright">
+                                    <a asp-action="ApproveForm" asp-route-id="@appForm.ApplicationFormId" class="btn btn-outline-success btn-sm">Approve</a>
+                                     <a asp-action="DenyForm" asp-route-id="@appForm.ApplicationFormId" class="btn btn-outline-danger btn-sm">Reject</a> <!--Deny-->
+
+                                </td>
+                                break;
+                            case 3:
+                                <td class="dropright">
+                                    <span class="text-success">Approved</span> <!--Received-->
+                                    <button class="btn" data-toggle="dropdown"><i class="fas fa-ellipsis-v"></i></button>
+                                    <a asp-action="UndoFormAction" asp-route-id="@appForm.ApplicationFormId" class="text-center btn btn-sm dropdown-menu undo" style="min-width: 5rem; padding: 6px;">Undo</a>
+                                </td>
+                                break;
+                            case 4:
+                                <td class="dropright">
+                                    <span class="text-danger">Rejected</span> &nbsp;
+                                    <button class="btn" data-toggle="dropdown"><i class="fas fa-ellipsis-v"></i></button>
+                                    <a asp-action="UndoFormAction" asp-route-id="@appForm.ApplicationFormId" class="text-center btn-sm btn dropdown-menu undo" style="min-width: 5rem; padding: 6px;">Undo</a>
+                                </td>
+                                break;
+                        }
+                       
+                    </tr>
+                    }
+                </tbody>
+            </table><br /><br />
+            
+            <h3>Application Responses</h3>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th scope="col">Question</th>
+                        <th scope="col">Response</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var tripQuestion in Model.TripQuestions)
+                    {
+                        <tr>
+                            <td>@tripQuestion.QuestionText</td>
+                            @try
+                            {
+                                <td>@Model.TripQuestionResponses.FirstOrDefault(tqr => tqr.TripQuestionID == tripQuestion.TripQuestionID).Response</td>
+                            }
+                            catch
+                            {
+                                <td>most trips do not have responses yet</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Denying @ViewBag.User</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <button style="float:right;" id="copybtn" class="btn btn-secondary"><i class="fas fa-copy"></i></button>
+                        <p id="p">
+
+                            <a class="js-emaillink" href="mailto:@ViewBag.Email">@ViewBag.Email</a>  <br /><br />
+                            Hello @ViewBag.User, <br />
+                            I am emailing you to inform you that you have been denied the trip @Model.App.Trip.TripName . <br />
+
+                            Sincerely, <br />
+                           
+                        </p>
+                    </div>
+                    <div class="modal-footer" id="modalfooter">
+                        <button type="button" id="ok"  class="btn btn-secondary" data-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script> 
+
+            $(document).ready(function () {
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+            
+            //get applicationFormId from deny button
+            function addAppFormId(applicationFormId) {
+                //remove old applicationFormId
+                $('#ok').removeData();
+                //add new applicationFormId
+                $('#ok').data('id', applicationFormId);
+                //open modal window
+                $('#exampleModal').modal();
+            }
+            $('#ok').on("click", function () {
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Coordinator/DropStudent/" + $(this).data("id"),
+                    dataType: 'json',
+                    crossDomain: true,
+                    success: function (data) {
+                        //alert(data);
+                        console.log(data);
+                        window.location.href = data;
+
+                    },
+                    error: function (data) {
+                        //alert("error" + data);
+                        console.log(data);
+                        window.location.href = data;
+                    }
+                });
+            });
+
+            document.getElementById('copybtn').addEventListener('click', function () {
+                var range = document.createRange();
+                var selection = window.getSelection();
+                range.selectNodeContents(document.getElementById('p'));
+
+                selection.removeAllRanges();
+                selection.addRange(range);
+
+
+                try {
+                    var successful = document.execCommand('copy');
+                    var msg = successful ? 'successful' : 'unsuccessful';
+                    console.log('Copying text command was ' + msg);
+                } catch (err) {
+                    console.log('Oops, unable to copy');
+                }
+            });
+
+            $('#exampleModal').on('hidden.bs.modal', function () {
+                return false;
+            });
+        </script>
+
+    </div>
+
+ 
+
+  

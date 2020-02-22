@@ -1,0 +1,101 @@
+﻿@model TravelApp.Models.Trip
+@{
+    ViewData["Title"] = "Rental Form";
+    Layout = "_Layout";
+}
+
+<div class="jumbotron text-center">
+    <h1>Rental Vehicle Pre-Approval Form</h1>
+    <h2>@Model.TripName</h2>
+</div>
+
+<div class="container">
+    <p>Per FIN-250-01, Travel Expense Reimbursement Procedure, pre-approval to rent a vehicle is needed from the employee’s supervisor and the appropriate dean or administrator. Pre-approval to rent a vehicle for field trips is also required.</p>
+
+    <p>When traveling from WCTC you must use the College’s current vehicle rental vendor, which is Enterprise Rental. Information about Enterprise vehicle rentals is located on the Portal under the Resources Tab. If you are renting a vehicle for other transportation purposes, you must select the car insurance option offered by the car rental agency.</p>
+
+    <p>Written authorization, detailed below, is required to be attached to the reconciling expense report.  You may use this form at your convenience; however, it is an optional alternative form of written authorization.</p>
+
+    <form>
+        <!-- Rental Justification -->
+        <div class="form-group">
+            <label for="rentalJustification">Reason and Cost Justification for Vehicle Rental:</label>
+            <textarea class="form-control" id="rentalJustification" rows="3"></textarea>
+        </div>
+        <!-- Vehicle Type -->
+        <div class="form-inline">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="vehicleType" id="vehicleTypeCar" value="Car" checked>
+                <label class="form-check-label" for="vehicleTypeCar">Car</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="vehicleType" id="vehicleTypeVan" value="Van">
+                <label class="form-check-label" for="vehicleTypeVan">Van (12 Passenger Max)</label>
+            </div>
+        </div>
+
+        <!-- Date(s) of Vehicle Rental -->
+        <div class="form-inline">
+
+            <!-- Date TODO: Date picker-->
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label>Date(s) of Vehicle Rental:</label>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="dateDeparting">From</label>
+                    <input type="text" class="form-control" id="dateDeparting">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="dateReturning">To</label>
+                    <input type="text" class="form-control" id="dateReturning">
+                </div>
+            </div>
+        </div>
+
+        <!-- Driver TODO: Drop down from multiple coordinators??-->
+
+        <div class="form-group">
+            <label for="vehicleDriver">Driver</label>
+            <input type="text" class="form-control" id="vehicleDriver" aria-describedby="vehicleDriver">
+        </div>
+
+        <!-- Passenger TODO: Dropdown from participants and add more-->
+        <div class="form-group">
+            <label for="vehiclePassengers">Passengers</label>
+            @*<input type="text" class="form-control" id="vehiclePassengers" aria-describedby="vehiclePassengers">*@
+            <select class="form-control" id="vehiclePassengers">
+                <option>Student 1</option>
+                <option>Student 2</option>
+                <option>Student 3</option>
+                <option>Student 4</option>
+                <option>Student 5</option>
+            </select>
+        </div>
+
+        <!-- Estimated Cost TODO: Validate-->
+        <div class="form-group">
+            <label for="estimatedCost">Estimated Cost</label>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                </div>
+
+                <input type="text" class="form-control" id="estimatedCost" aria-describedby="estimatedCost">
+                <div class="input-group-append">
+                    <span class="input-group-text">.00</span>
+                </div>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-outline-primary">Submit</button>
+        <a asp-action="TripDetail" asp-route-id="@Model.TripId" class="btn btn-outline-secondary">Cancel</a>
+    </form>
+
+    <!--
+            The form requires three signatures at the bottom:
+            Traveler’s Signature
+            Supervisor’s Signature/Approval
+            Dean or Administrator’s Signature/Approval
+        -->
+</div>

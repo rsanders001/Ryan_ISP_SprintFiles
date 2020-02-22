@@ -1,0 +1,81 @@
+@{
+    ViewData["Title"] = "Coordinator Dashboard";
+    Layout = "_Layout";
+}
+
+<div class="jumbotron text-center" style="background-color: #003e7a; color: white; padding-top: 20px; padding-bottom: 20px; ">
+    <h1>Welcome, @ViewBag.User.FirstName @ViewBag.User.LastName</h1>
+</div>
+
+<div class="subNav">
+    <div class="container">
+        <a asp-action="CoordinatorDocsListView" class="btn btn-outline-primary subNav-btn">View Forms</a>&nbsp;&nbsp;&nbsp;
+        <a asp-action="NewTrip" class="btn btn-outline-primary subNav-btn">Create Trip</a>
+    </div>
+    </div>
+
+    <span style="margin: 0px 0px 30px 0px;"></span> <!-- ?? -->
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-12 col-sm-12 mb-6 ">
+                <br />
+                @{
+                    var count2 = 0;
+                    <h3>Upcoming Trips</h3>
+                    <table class="table">
+
+                        <tbody>
+
+                            @foreach (var trip in Model)
+                            {
+                                @if (trip.CreatedBy == ViewBag.uid && DateTime.Compare(trip.DateDeparting, DateTime.Today) > 0)
+                                {
+                                    count2++;
+                                    <tr>
+                                        <td>
+                                            <a asp-controller="Coordinator" asp-action="TripDetail" asp-route-id="@trip.TripId">@trip.TripName</a>
+                                        </td>
+                                        <td><i>@trip.DateDeparting.ToShortDateString()–@trip.DateReturning.ToShortDateString()</i></td>
+                                    </tr>
+                                }
+                            }
+
+
+                        </tbody>
+
+                    </table>
+                }
+                @if (count2 == 0)
+                {
+                    <p>You have no trips! Create one <a asp-controller="Coordinator" asp-action="NewTrip">Here!</a></p>
+                }
+
+            </div>
+
+            <div class="col-md-12 col-sm-12 mb-6 text-left">
+                <br />
+                <h3>Past Trips</h3>
+                <ul class="bulletLess">
+                    @{
+                        var count = 0;
+                        foreach (var trip in Model)
+                        {
+                            var departing = trip.DateDeparting;
+                            if (trip.CreatedBy == ViewBag.uid && DateTime.Compare(trip.DateDeparting, DateTime.Today) < 0)
+                            {
+                                <li><a asp-controller="Coordinator" asp-action="TripDetail" asp-route-id="@trip.TripId">@trip.TripName</a></li>
+                                count++;
+                            }
+                        }
+                        if (count == 0)
+                        {
+                            <li>You have no past trips yet!</li>
+                        }
+                    }
+                </ul>
+            </div>
+
+        </div>
+    </div>

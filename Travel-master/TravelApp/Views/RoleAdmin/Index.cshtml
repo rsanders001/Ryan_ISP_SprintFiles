@@ -1,0 +1,95 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<IdentityRole>
+@{
+    ViewData["Title"] = "Role Admin Dashboard";
+    Layout = "_Layout";
+}
+
+<div class="jumbotron jumbotron-fluid text-center">
+    <h1>User Roles</h1>
+</div>
+<div class="subNav">
+    <div class="container">
+        <a class="btn btn-outline-primary back-btn"  asp-controller="Admin" asp-action="Index"> <i class="fas fa-arrow-left"></i> </a>
+        <a class="btn btn-outline-primary subNav-btn" asp-action="Create">Create Role</a>
+        <a class="btn btn-outline-primary subNav-btn" asp-controller="Admin" asp-action="Index">User Accounts</a>
+    </div>
+</div>
+<div class="container">
+    <div class="text-danger" asp-validation-summary="All"></div>
+
+    <div class="table-responsive">
+        <table class="table table-sm table-striped table-hover" id="roleTable">
+            <tr>
+                <th scope="col">Role Name</th>
+                <th scope="col">Actions</th>
+            </tr>
+            @if (Model.Count() == 0)
+            {
+                <tr><td colspan="3" class="text-center">No Roles</td></tr>
+            }
+            else
+            {
+                foreach (var role in Model)
+                {
+                    <tr>
+                        <td>@role.Name</td>
+                        <td>
+                            @if (!role.Name.Equals("Admin") && !role.Name.Equals("Coordinator") && !role.Name.Equals("Student"))
+                            {
+                                    <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@role.Id">Edit</a>
+                                    <button class="btn btn-sm btn-danger" data-record-id="@role.Id" data-record-title="@role.Name" data-toggle="modal" data-target="#confirm-delete">Delete</button>
+                            }
+                            else
+                            {
+                                <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@role.Id">Edit</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+
+    <!-- confirm delete modal -->
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="Confirm Delete" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="confirmDelete">Confirm Delete</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <p>You are about to delete the <b><i class="title"></i></b> role, this procedure is irreversible.</p>
+                    <p>Do you want to proceed?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger btn-ok">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Bind click to OK button within popup
+    $('#confirm-delete').on('click', '.btn-ok', function (e) {
+
+        var $modalDiv = $(e.delegateTarget);
+        var id = $(this).data('recordId');
+
+        $modalDiv.addClass('loading');
+        $.post('/RoleAdmin/Delete/' + id).then(function () {
+            $modalDiv.modal('hide').removeClass('loading');
+            window.location.reload(true);
+        });
+    });
+
+    // Bind to modal opening to set necessary data properties to be used to make request
+    $('#confirm-delete').on('show.bs.modal', function (e) {
+        var data = $(e.relatedTarget).data();
+        $('.title', this).text(data.recordTitle);
+        $('.btn-ok', this).data('recordId', data.recordId);
+    });
+</script>

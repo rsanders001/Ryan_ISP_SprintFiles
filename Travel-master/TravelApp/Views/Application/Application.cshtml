@@ -1,0 +1,66 @@
+﻿@model TravelApp.Models.AspNetUsers
+
+@{
+    ViewData["Title"] = "Application";
+    Layout = "_Layout";
+}
+
+<h2>Application</h2>
+
+<h4>Person</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Application" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="WctcId" class="control-label">Student ID Number</label>
+                <input asp-for="WctcId" class="form-control" />
+                <span asp-validation-for="WctcId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label">First Name</label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label">Last Name</label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <!-- PersonType set by login prior to reaching form -->
+            <!--<div class="form-group">
+                <label asp-for="PersonTypeId" class="control-label"></label>
+                <select asp-for="PersonTypeId" class ="form-control" asp-items="ViewBag.PersonTypeId"></select>
+            </div>-->
+            <!-- Automatically pull e-mail from initial account setup of email/PW? -->
+            <div class="form-group">
+                <label asp-for="Email" class="control-label">School Email</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label">Phone Number</label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Gender" class="control-label">Gender</label>
+                <input asp-for="Gender" class="form-control" />
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+            <!--<div class="form-group">
+                <label asp-for="ModifiedDate" class="control-label">Today's Date</label>
+                <input asp-for="ModifiedDate" class="form-control" />
+                <span asp-validation-for="ModifiedDate" class="text-danger"></span>
+            </div>-->
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to Index</a>
+</div>

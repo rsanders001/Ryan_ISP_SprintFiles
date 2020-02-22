@@ -1,0 +1,410 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using TravelApp.Models;
+@inject UserManager<Models.AppUser> UserManager
+@model TravelApp.Models.StudentUser
+@{
+    ViewData["Title"] = "Student Info";
+    Layout = "_Layout";
+}
+<link rel="stylesheet" href="~/css/chosen.min.css" />
+<div class="jumbotron text-center">
+    <h1>Update Your Student Profile</h1>
+</div>
+<div class="subNav">
+    <div class="container">
+
+
+        @if (User.IsInRole("Admin"))
+        {
+            if (Model.TripId != null)
+            {
+                <a asp-action="TripDetail" asp-route-id="@Model.TripId" class="btn btn-outline-primary back-btn"><i class="fas fa-arrow-left"></i></a>
+            }
+            else
+            {
+                <a asp-controller="Admin" asp-action="Index" class="btn btn-outline-primary back-btn"><i class="fas fa-arrow-left"></i></a>
+            }
+        }
+        else if (User.IsInRole("Coordinator"))
+        {
+            if (Model.TripId != null)
+            {
+                <a asp-action="TripDetail" asp-route-id="@Model.TripId" class="btn btn-outline-primary back-btn"><i class="fas fa-arrow-left"></i></a>
+            }
+            else
+            {
+                <a asp-controller="Coordinator" asp-action="Index" class="btn btn-outline-primary back-btn"><i class="fas fa-arrow-left"></i></a>
+            }
+        }
+        else if (User.IsInRole("Student"))
+        {
+            if (Model.TripId != null)
+            {
+                <a asp-action="TripDetail" asp-route-id="@Model.TripId" class="btn btn-outline-primary back-btn"><i class="fas fa-arrow-left"></i></a>
+            }
+            else
+            {
+                <a asp-controller="Student" asp-action="Index" class="btn btn-outline-primary back-btn"><i class="fas fa-arrow-left"></i></a>
+            }
+        }
+
+    </div>
+</div>
+<div class="container">
+    <div>
+        <span id="JSErrors"></span>
+    </div>
+    <form id="EditInfo" asp-action="StudentInfo" method="post">
+        <input type="hidden" asp-for="TripId" value="@Model.TripId" />
+        <div class="row">
+            <div class="col-md-6 col-sm-12 mb-5">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="WctcID">WCTC ID</label>
+                    <input asp-for="WctcID" class="form-control" value="@Model.AppUser.WctcID">
+                    <span asp-validation-for="WctcID" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FirstName">First Name</label>
+                    <input asp-for="FirstName" class="form-control" value="@Model.AppUser.FirstName">
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName">Last Name</label>
+                    <input asp-for="LastName" class="form-control" value="@Model.AppUser.LastName">
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email">Email</label>
+                    <input asp-for="Email" class="form-control" value="@Model.AppUser.Email">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Phone">Phone</label>
+                    @if (Model.AppUser.PhoneNumber != null)
+                    {
+                        <input asp-for="Phone" class="form-control" value="@Model.AppUser.PhoneNumber">
+                    }
+                    else
+                    {
+                        <input asp-for="Phone" class="form-control">
+                    }
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+                @if (User.IsInRole("Coordinator") || User.IsInRole("Admin"))
+                {
+                    <div class="form-group">
+                        <label asp-for="Gender">Gender</label><br />
+                        @if (Model.AppUser.Gender.ToString().Equals("M"))
+                        {
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="M" checked />Male</label>
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="F" />Female</label>
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="O" />Other</label>
+                        }
+                        else if (Model.AppUser.Gender.ToString().Equals("F"))
+                        {
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="M" />Male</label>
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="F" checked />Female</label>
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="O" />Other</label>
+                        }
+                        else if (Model.AppUser.Gender.ToString().Equals("O"))
+                        {
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="M" />Male</label>
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="F" />Female</label>
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="O" checked />Other</label>
+                        }
+                        else
+                        {
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="M" />Male</label>
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="F" />Female</label>
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="O" />Other</label>
+                        }
+                        <span asp-validation-for="Gender" class="text-danger"></span>
+
+                    </div>
+                }
+            </div>
+
+            @if (User.IsInRole("Student") && !User.IsInRole("Coordinator") && !User.IsInRole("Admin"))
+            {
+                <div class="col-md-6 col-sm-12 mb-5">
+                    <div class="form-group">
+                        <label asp-for="Gender">Gender</label><br />
+                        @if (Model.AppUser.Gender.ToString().Equals("M"))
+                        {
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="M" checked />Male</label>
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="F" />Female</label>
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="O" />Other</label>
+                        }
+                        else if (Model.AppUser.Gender.ToString().Equals("F"))
+                        {
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="M" />Male</label>
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="F" checked />Female</label>
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="O" />Other</label>
+                        }
+                        else if (Model.AppUser.Gender.ToString().Equals("O"))
+                        {
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="M" />Male</label>
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="F" />Female</label>
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="O" checked />Other</label>
+                        }
+                        else
+                        {
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="M" />Male</label>
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="F" />Female</label>
+                            <label asp-for="Gender"><input asp-for="Gender" type="radio" class="form-control" value="O" />Other</label>
+                        }
+                        <span asp-validation-for="Gender" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group" id="userRole">
+                        @*<div class="form-inline">
+            <label asp-for="ProgramID">Program</label>&nbsp;&nbsp;
+            <input placeholder="Filter Options" class="form-control" style="height: 30px; width: 260px;">
+        </div><br />
+        <select asp-for="ProgramID" class="form-control" id="programs">
+
+            <option value="" selected>Select...</option>
+            @foreach (var p in ViewBag.programs)
+            {
+                @if (p.ProgramId == Model.Student.ProgramId)
+                {
+                    <option value="@p.ProgramId" selected>@p.Name</option>
+                }
+                else
+                {
+                    <option value="@p.ProgramId">@p.Name</option>
+                }
+            }
+        </select>
+        <span asp-validation-for="ProgramID" class="text-danger"></span>*@
+
+                        <label asp-for="ProgramID">Program</label>&nbsp;&nbsp;
+
+                        <select class="form-control chosen-select" asp-for="ProgramID" data-placeholder="Select...">
+                            @foreach (var p in ViewBag.programs)
+                            {
+                                @if (p.ProgramId == Model.Student.ProgramId)
+                                {
+                                    <option value="@p.ProgramId" selected>@p.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@p.ProgramId">@p.Name</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="ProgramID" class="text-danger"></span>
+
+
+
+
+
+                    </div>
+
+
+
+
+
+
+                    @if ((Model.Student.BirthDate) != null && ((DateTime)Model.Student.BirthDate) != DateTime.MinValue)
+                    {
+                        <div class="form-group">
+                            <br />
+                            <label asp-for="BirthDate">Birthdate</label>
+                            <input type="datetime" asp-for="BirthDate" class="form-control" value="@(((DateTime)(Model.Student.BirthDate)).ToString("MM/dd/yyyy"))">
+                            <!--<span>if was true</span> -->
+                            <span asp-validation-for="BirthDate" class="text-danger"></span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <br />
+                            <label asp-for="BirthDate">Birthdate</label>
+                            <input type="date" asp-for="BirthDate" class="form-control">
+                            <!--<span>We ran through the else</span> -->
+                            <span asp-validation-for="BirthDate" class="text-danger"></span>
+                        </div>
+                    }
+
+
+                    <!--New Code-->
+                    <div class="form-group" id="userRole">
+                        <br />
+
+                        <label asp-for="ExpectedGradMonth">Expected Graduation Semester</label>
+
+                        @if (Model.Student.ExpectedGradMonth == null)
+                        {
+                            <select id="Semester" asp-for="ExpectedGradMonth" class="form-control">
+                                <option value="spring">Spring</option>
+                                <option value="summer">Summer</option>
+                                <option value="fall">Fall</option>
+                            </select>
+                            @*<span>top</span>*@
+                        }
+                        else
+                        {
+                            <select id="Semester" asp-for="ExpectedGradMonth" class="form-control">
+                                @if (Model.Student.ExpectedGradMonth.Equals("spring"))
+                                {
+                                    <option value="spring" selected>Spring</option>
+                                    <option value="summer">Summer</option>
+                                    <option value="fall">Fall</option>
+                                    @*<span>Spring</span>*@
+                                }
+                                else if (Model.Student.ExpectedGradMonth.Equals("summer"))
+                                {
+                                    <option value="spring">Spring</option>
+                                    <option value="summer" selected>Summer</option>
+                                    <option value="fall">Fall</option>
+                                    @*<span>Summer</span>*@
+                                }
+                                else if (Model.Student.ExpectedGradMonth.Equals("fall"))
+                                {
+                                    <option value="spring">Spring</option>
+                                    <option value="summer">Summer</option>
+                                    <option value="fall" selected>Fall</option>
+                                    @*<span>fall</span>*@
+                                }
+                                else
+                                {
+                                    <option value="spring">Spring</option>
+                                    <option value="summer">Summer</option>
+                                    <option value="fall">Fall</option>
+                                    @*<span>else</span>*@
+                                }
+                            </select>
+                        }
+                        <span asp-validation-for="ExpectedGradMonth" class="text-danger"></span>
+                    </div>
+                    <div class="form-group" id="userRole">
+                        <label asp-for="ExpectedGradYear">Expected Graduation Year</label>
+                        @if (Model.Student.ExpectedGradYear != null)
+                        {
+                            <input asp-for="ExpectedGradYear" class="form-control" value="@Model.Student.ExpectedGradYear" id="ExpectedGradYear">
+                        }
+                        else
+                        {
+                            <input asp-for="ExpectedGradYear" class="form-control">
+                        }
+                        <span asp-validation-for="ExpectedGradYear" class="text-danger"></span>
+                    </div>
+                </div>
+
+            }
+            else { }
+
+        </div>
+
+        <div class="text-center mb-5">
+            <button type="submit" class="btn btn-outline-primary">Save</button>
+            @if (User.IsInRole("Admin"))
+            {
+                if (Model.TripId != null)
+                {
+                    <a asp-action="TripDetail" asp-route-id="@Model.TripId" class="btn btn-outline-secondary">Cancel</a>
+                }
+                else
+                {
+                    <a asp-controller="Admin" asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                }
+            }
+            else if (User.IsInRole("Coordinator"))
+            {
+                if (Model.TripId != null)
+                {
+                    <a asp-action="TripDetail" asp-route-id="@Model.TripId" class="btn btn-outline-secondary">Cancel</a>
+                }
+                else
+                {
+                    <a asp-controller="Coordinator" asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                }
+            }
+            else if (User.IsInRole("Student"))
+            {
+                if (Model.TripId != null)
+                {
+                    <a asp-action="TripDetail" asp-route-id="@Model.TripId" class="btn btn-outline-secondary">Cancel</a>
+                }
+                else
+                {
+                    <a asp-controller="Student" asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                }
+            }
+        </div>
+    </form>
+
+</div>
+
+
+<script type="text/javascript" src="~/js/chosen.jquery.min.js"></script>
+
+<script type="text/javascript" src="~/js/CustomerValidation.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+
+        $('.chosen-select').chosen({ width: '100%' });
+    })
+</script>
+
+<style>
+    a.chosen-single span {
+        display: block;
+        width: 100%;
+        height: calc(1.5em + .75rem + 2px);
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+</style>
+
+@*<script>
+        jQuery.fn.filterByText = function (textbox) {
+            return this.each(function () {
+                var select = this;
+                var options = [];
+                $(select).find('option').each(function () {
+                    options.push({
+                        value: $(this).val(),
+                        text: $(this).text()
+                    });
+                });
+                $(select).data('options', options);
+
+                $(textbox).bind('change keyup', function () {
+                    var options = $(select).empty().data('options');
+                    var search = $.trim($(this).val());
+                    var regex = new RegExp(search, "gi");
+
+                    $.each(options, function (i) {
+                        var option = options[i];
+                        if (option.text.match(regex) !== null) {
+                            $(select).append(
+                                $('<option>').text(option.text).val(option.value)
+                            );
+                        }
+                    });
+                });
+            });
+        };
+
+        // You could use it like this:
+
+        $(function () {
+            $('#programs').filterByText($('input'));
+
+        });
+
+
+    </script>*@

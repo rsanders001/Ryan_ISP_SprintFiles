@@ -1,0 +1,76 @@
+﻿@model TravelApp.Models.TripApplyModel
+@{
+    ViewData["Title"] = "Trip Detail";
+    Layout = "_Layout";
+}
+
+<div class="jumbotron text-center">
+    <h1>@Model.Trip.TripName</h1>
+</div>
+<div class="subNav">
+    <div class="container">
+
+        <a asp-action="Index" class="btn btn-outline-primary noPrint back-btn"><i class="fas fa-arrow-left"></i> </a>
+        @if (ViewBag.TimeSpan <= 112 && ViewBag.DOB != null)
+        {
+            //if time span is less than 16 weeks (one semester) and DOB has been entered
+            <a class="btn btn-outline-primary subNav-btn"asp-action="StudentInfo" asp-route-id="@Model.Trip.TripId">Update Profile</a>
+            <i class="text-success lastUpdated">&nbsp;Last Updated: @ViewBag.ModDate.ToShortDateString()</i><br />
+        }
+        else
+        {
+            <a class="btn btn-outline-danger subNav-btn" asp-action="StudentInfo" asp-route-id="@Model.Trip.TripId">Update Profile Now!</a>
+            <i class="text-danger lastUpdated">Last Updated: @ViewBag.ModDate.ToShortDateString()</i><br />
+        }
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-sm-12 mb-5">
+            <h3>Details</h3>
+            <strong>Destination: </strong>@Model.Trip.Destination.Name<br />
+            <strong>Departing: </strong>@Model.Trip.DateDeparting.Value.ToShortDateString()<br />
+            <strong>Returning: </strong>@Model.Trip.DateReturning.Value.ToShortDateString()<br />
+            <strong>Objective: </strong>@Model.Trip.EducationalObjective
+            <br />
+            <i><strong>Student Organization: </strong> @Model.Trip.StudentOrganization </i>
+        </div>
+        <div class="col-md-6 col-sm-12 text-center mb-5">
+            <h3>Apply Using Your Student Profile</h3>
+
+                  <form asp-action="SubmitTripApplication" method="post">
+                      <input type="hidden" asp-for="TripId" value="@Model.Trip.TripId" />
+                      <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                      <div class="form-row">
+                          <div class="col-md-3"></div>
+                          <div class="col-md-3 col-sm-12">
+                              <label asp-for="Gpa" class="control-label">Current GPA</label>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                              <input asp-for="Gpa" type="number" step="0.01" min="0" max="4" class="form-control" required />
+                          </div>
+                          <div class="col-md-3"></div>
+                          <span asp-validation-for="Gpa" class="text-danger"></span>
+                      </div>
+                      <div class="form-group">
+                          <label asp-for="Rationale" class="control-label">Why do you want to go on this trip?</label>
+                          <textarea asp-for="Rationale" class="form-control" rows="3" required></textarea>
+                          <span asp-validation-for="Rationale" class="text-danger"></span>
+                      </div>
+                      @*javascript?*@  
+                      @foreach (var question in ViewBag.Questions)
+                      {                         
+                        <div class="form-group">
+                           <label class="control-label">@question.QuestionText</label>
+                           <textarea name="responses" class="form-control" rows="3" required></textarea>
+                           <span class="text-danger"></span>
+                        </div>
+                      }
+                      <div class="form-group text-center">
+                          <button type="submit" class="btn btn-outline-primary">Apply</button>
+                          <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                      </div>
+                  </form>
+        </div>
+    </div>
+</div>

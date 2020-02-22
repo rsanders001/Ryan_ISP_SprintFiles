@@ -1,0 +1,144 @@
+﻿@{
+    ViewData["Title"] = "Funding Verification";
+    Layout = "_Layout";
+}
+<div class="jumbotron text-center">
+    <h2>Club Travel Funding</h2>
+</div>
+<div class="subNav">
+    <div class="container">
+        <a asp-action="CoordinatorDocsListView" class="btn btn-outline-primary noPrint back-btn"><i class="fas fa-arrow-left"></i> </a>
+        <form method="post">
+            <button type="button" class="btn btn-success noPrint subNav-btn" onclick="print()">Print</button>
+
+        </form>
+
+    </div>
+</div>
+<div class="container">
+    <div class="form-group noPrint">
+        <label for="exampleFormControlSelect1">Please choose this form's associated trip</label>
+        <select class="form-control" id="exampleFormControlSelect1">
+            @{
+                foreach (var trip in ViewBag.Trips)
+                {
+                    if (trip.CreatedBy == ViewBag.userId)
+                    {
+
+                        <option asp-controller="Coordinator" id="@trip.TripId">@trip.TripName</option>
+
+                    }
+                } }
+        </select>
+    </div>
+    This form must be submitted along with all travel paperwork
+    <div class="table-responsive">
+        <table class="table table-sm table-bordered">
+
+            <tbody>
+                <tr class="d-flex">
+                    <th class="col-4">Club Traveling:</th>
+                    <td class="col-8"></td>
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">Event:</th>
+                    <td class="col-8"></td>
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">Destination:</th>
+                    <td class="col-8"></td>
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">Local/State:</th>
+                    <td class="col-8"></td>
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">National/out of state:</th>
+                    <td class="col-8"></td>
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">Time(s):</th>
+                    <td class="col-8"></td>
+                </tr>
+                <tr class="d-flex">
+                    <th class="col-4">    Dates(s):</th>
+                    <td class="col-8"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div><br />
+    <h5>Total Estimated Budget:</h5>
+    <form action="#" class="hide-inputbtns">
+        <div class="row form-group">
+            <div class="col-3"><h6>Contributor</h6></div>
+            <div class="col-2"><h6>Amount</h6></div>
+        </div>
+        <div class="row form-group">
+            <div class="col-3">
+                <label>SGA</label>
+            </div>
+            <div class="col-2">
+                <input type="number" class="form-control ip" />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-3">
+                <label>Club</label>
+            </div>
+            <div class="col-2">
+                <input class="ip form-control" type="number" />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-3">
+                <label>Fundraised</label>
+            </div>
+            <div class="col-2">
+                <input class="ip form-control" type="number" />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-3">
+                <label>Other</label>
+            </div>
+            <div class="col-2">
+                <input class="ip form-control" type="number" />
+            </div>
+        </div>
+        <hr />
+        <div class="row form-group">
+            <div class="col-3">
+                <h6><label>Total</label></h6>
+            </div>
+            <div class="col-2">
+                <h6> $<output id="total"></output></h6>
+            </div>
+        </div>
+
+
+    </form>
+    
+    <br />
+    While funds are transferred prior to the academic school year starting, clubs are still expected to pay for only 75% of all basic costs for local/state competitions and up to
+    60% for national competitions. Students and clubs should be fundraising to cover remaining costs.
+
+</div>
+<script>
+    $('.form-group').on('input', '.ip', function () {
+        var total = 0;
+        $('.form-group .ip').each(function () {
+            var inputVal = $(this).val();
+            if ($.isNumeric(inputVal)) {
+                total += parseFloat(inputVal);
+            }
+        });
+        $('#total').text(total.toFixed(2));
+    });
+</script>
+<style>
+
+
+    
+</style>
+
+

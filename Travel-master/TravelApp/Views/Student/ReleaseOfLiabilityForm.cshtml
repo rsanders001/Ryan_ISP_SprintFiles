@@ -1,0 +1,205 @@
+﻿@model TravelApp.Models.SignatureFormViewModel
+@{
+    ViewData["Title"] = "Release of Liability Form";
+    Layout = "_Layout";
+}
+
+<div class="jumbotron text-center">
+    <h1>@Model.Trip.TripName</h1>
+    <h2>RELEASE OF LIABILITY FORM</h2>
+</div>
+    <form method="post">
+        <div class="subNav">
+
+            <div class="container">
+                <a asp-action="AcceptedTripDetail" asp-route-id="@Model.AppForm.ApplicationId" class="btn btn-outline-primary noPrint back-btn"><i class="fas fa-arrow-left"></i> </a>
+
+                <button type="submit" asp-action="PrintFormSubmit" asp-route-id="@Model.AppForm.ApplicationFormId" onclick="print()" class="btn btn-outline-primary noPrint subNav-btn">Print & Submit</button>
+                </div>
+            </div>
+
+        <div class="container">
+            <p>This Release of Liability (“Release”) is executed by: @ViewBag.User.FirstName @ViewBag.User.LastName (“PARTICIPANT”)</p>
+            <p>and is issued to the WAUKESHA COUNTY TECHNICAL COLLEGE (“COLLEGE”).</p>
+            <p>Participant is participating in a COLLEGE affiliated Program/Course/Practicum/Training/Activity (“Activity”).</p>
+
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr class="d-flex">
+                            <th class="col-4">This Activity is more fully described as:</th>
+                            <td class="col-8">@Model.Trip.TripName</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="d-flex">
+                            <th class="col-4">WCTC Course or WCTC Club Affiliation:</th>
+                            <td class="col-8">@Model.Trip.StudentOrganization</td>
+                        </tr>
+                        <tr class="d-flex">
+                            <th class="col-4">Course Number:</th>
+                            <td class="col-8">@Model.Course.Crn</td>
+                        </tr>
+                        <tr class="d-flex">
+                            <th class="col-4">Activity Date(s):</th>
+                            <td class="col-8">@Model.Trip.DateDeparting.Value.ToShortDateString() – @Model.Trip.DateReturning.Value.ToShortDateString()</td>
+                        </tr>
+                        <tr class="d-flex">
+                            <th class="col-4">Activity / Location:</th>
+                            <td class="col-8">@Model.Destination.Name</td>
+                        </tr>
+                        <tr class="d-flex">
+                            <th class="col-4">Activity Address:</th>
+                            <td class="col-8">@Model.Destination.AddressLine1<br />@Model.Destination.City @Model.Destination.State, @Model.Destination.PostalCode<br />@Model.Destination.Country</td>
+                        </tr>
+                        <tr class="d-flex">
+                            <th class="col-4">Reason:</th>
+                            <td class="col-8">@Model.Trip.EducationalObjective</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-responsive">
+                I will <b>NOT</b> be lodging separately on this trip &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" class="form-check-input" name="lodging" id="toLodge" onclick="lodging()" /><br />
+                <table class="table table-sm table-bordered" id="table">
+                    <tbody>
+                        <tr class="d-flex">
+                            <th class="col-4">Lodging:</th>
+                            <td class="col-8" contenteditable="true"></td>
+                        </tr>
+                        <tr class="d-flex">
+                            <th class="col-4">Lodging FULL Address:</th>
+                            <td class="col-8" contenteditable="true"></td>
+                        </tr>
+                        <tr class="d-flex">
+                            <th class="col-4">Lodging Dates:</th>
+                            <td class="col-8" contenteditable="true"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <h4 class="text-center">The remainder of this form must be agreed to by the participant</h4>
+
+            <p>The Participant understands that there are certain dangers, hazards, and risks inherent in the Activity, including, but not limited to, risks associated with traveling in a motor vehicle, traveling on public highways and/or private property, entering and traveling through a business or facility, including those businesses or facilities utilizing heavy machinery/equipment and/or hazardous materials, slips, trips, falls, and any other risk or hazard which may present itself.  These dangers can include damage or destruction to property, severe bodily injury, and even death.</p>
+            ________ Initial Here<br /> <br />
+
+            <p>Participant agrees to exercise reasonable care at all times with respect to Participant’s own safety and with respect to the safety of others.  Participant agrees to abide by all rules, policies and procedures of the COLLEGE that are set forth in the Code of Conduct found on the COLLEGE’s website: <a href="https://www.wctc.edu/campus-life/safety-policies/student-code-of-conduct/index.php" target="_blank" rel="noopener noreferrer">wctc.edu/campus-life/safety-policies/student-code-of-conduct/index.php</a> as well as any additional rules, policies and procedures of the location of the Activity.  Participant has no health-related issues that would preclude or restrict participation in the Activity.</p>
+            ________ Initial Here<br /> <br />
+
+            <div class="page-break"></div>
+
+            <p>In consideration for allowing the Participant to attend the Activity, the sufficiency of which the Participant hereby acknowledges, the Participant, on behalf of him/herself, the Participant’s spouse (if applicable), the Participant’s heirs, assigns, related individuals and related entities, does hereby WAIVE, RELEASE, AND DISCHARGE the COLLEGE, including its Board of Trustees/Directors, administrators, officers, employees, teachers, agents and insurers, from any and all claims, causes of action, suits, damages, or liabilities, INCLUDING BUT NOT LIMITED TO THOSE BASED ON THE COLLEGE'S OWN NEGLIGENCE which the Participant has, shall have, or may have in the future against the COLLEGE arising out of, based on, related to, or connected with, the Participant’s participation in the Activity. This release of liability does not, however, apply to any intentional or reckless acts or conduct by the COLLEGE.</p>
+            ________ Initial Here <br /> <br />
+
+            <p>This Release shall be governed by the laws of the State of Wisconsin, which shall be the forum for any lawsuits filed under, or incident to, this Agreement and Release.</p>
+            ________ Initial Here<br /><br />
+
+            <p>By signing this document, Participant acknowledges that s/he is fully informed of the contents of this Release, and represents that s/he understands it. Participant is not relying on any oral or written representations, statements or inducements, apart from those made in this Release.</p>
+            ________ Initial Here<br /> <br />
+
+            <h4 class="text-center">
+                By signing this Agreement and Release, you give up substantial legal rights.<br />
+                Read and understand this entire document before you sign it.
+            </h4>
+            <br />
+
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" name="ofAge" id="ofAge" onclick="adultAge()" />
+                <label for="ofAge" class="form-check-label">I am at least 18 years of age.</label>
+            </div>
+            <label>  __________ I have read the Release of Liability Form and agree to abide by these established rules</label>
+            <br />
+
+            <div class="row">
+                <div class="col-md-6 col-sm-12 mb-5">
+                    <div class="table-responsive">
+                        <table class="table table-sm borderless">
+                            <thead>
+                                <tr class="d-flex">
+                                    <th class="col-4"><u>Student</u></th>
+                                    <td class="col-8">WCTCID @ViewBag.User.WctcID</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="d-flex">
+                                    <th class="col-4">Name:</th>
+                                    <td class="col-8">@ViewBag.User.FirstName @ViewBag.User.LastName</td>
+                                </tr>
+                                <tr class="d-flex">
+                                    <th class="col-4">Signature:</th>
+                                    <td class="col-8" style="border-bottom: solid thin !important;"></td>
+                                </tr>
+                                <tr class="d-flex">
+                                    <th class="col-4">Date:</th>
+                                    <td class="col-8">@ViewBag.Today</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-12 mb-5" id="adultSig">
+                    <div class="table-responsive">
+                        <table class="table table-sm borderless">
+                            <thead>
+                                <tr class="d-flex">
+                                    <th class="col-4"><u>Parent / Guardian</u></th>
+                                    <td class="col-8">Required if under 18</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="d-flex">
+                                    <th class="col-4">Print Name:</th>
+                                    <td class="col-8" style="border-bottom: solid thin !important;"></td>
+                                </tr>
+                                <tr class="d-flex">
+                                    <th class="col-4">Signature:</th>
+                                    <td class="col-8" style="border-bottom: solid thin !important;"></td>
+                                </tr>
+                                <tr class="d-flex">
+                                    <th class="col-4">Date:</th>
+                                    <td class="col-8">@ViewBag.Today</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <p class="font-weight-bold noPrint">
+                Please print this document and deliver the signed physical copy to your trip's coordinator.
+            </p>
+        </div>
+</form>
+
+
+<script>
+    //function for toggling adult signature field
+    function adultAge() {
+        // Get the checkbox
+        var ofAge = document.getElementById("ofAge");
+        // Get the div to display
+        var adultSig = document.getElementById("adultSig");
+
+        // If the checkbox is checked, display the output div and change classes
+        if (ofAge.checked == true) {
+            adultSig.style.display = "none";
+            adultSig.className = "col-md-6 col-sm-12 mb-5 font-weight-bold noPrint";
+        }
+        else {
+            adultSig.style.display = "block";
+            adultSig.className = "col-md-6 col-sm-12 mb-5 font-weight-bold yesPrint";
+        }
+    }
+    function lodging() {
+        var lodging = document.getElementById("toLodge");
+        var lodgingTable = document.getElementById("table");
+        if (lodging.checked) {
+            lodgingTable.style.display = "none";
+        }
+        else {
+            lodgingTable.style.display = "block";
+        }
+    }
+</script>

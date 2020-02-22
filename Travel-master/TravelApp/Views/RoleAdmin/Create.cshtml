@@ -1,0 +1,26 @@
+﻿@model string
+@{
+    ViewData["Title"] = "Create Roles";
+    Layout = "_Layout";
+}
+
+<div class="jumbotron jumbotron-fluid text-center">
+    <h1>Create Role</h1>
+</div>
+<div class="subNav">
+    <div class="container">
+        <a class="btn btn-outline-primary back-btn" asp-action="Index"> <i class="fas fa-arrow-left"></i> </a>
+    </div>
+</div>
+<div class="container">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <form asp-action="Create" method="post">
+        <div class="form-group">
+            <label for="name">New Role Name</label>
+            <input name="name" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-outline-primary">Create</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+    </form>
+</div>

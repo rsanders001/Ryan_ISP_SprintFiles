@@ -1,0 +1,27 @@
+﻿@using TravelApp.Models
+@model LoginModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_Layout";
+}
+
+<div class="jumbotron text-center">
+    <h1>Log In</h1>
+</div>
+
+<div class="container">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <form asp-action="Login" method="post">
+        <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
+        <div class="form-group">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Password"></label>
+            <input asp-for="Password" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-outline-primary">Log In</button>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+    </form>
+</div>

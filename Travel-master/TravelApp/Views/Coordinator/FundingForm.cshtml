@@ -1,0 +1,136 @@
+﻿@model TravelApp.Models.Trip
+@{
+    ViewData["Title"] = "Funding Form";
+    Layout = "_Layout";
+}
+
+<div class="jumbotron text-center">
+    <h1>Club Travel Funding Form</h1>
+    <h2>@Model.TripName</h2>
+</div>
+
+<div class="container">
+    <form>
+        <!-- TODO: Instead of inputs, this should be generated from database -->
+        <!-- Club Traveling -->
+        @*<div class="form-group">
+            <label for="clubTraveling">Club Traveling</label>
+            <input type="text" class="form-control" id="clubTraveling" aria-describedby="clubTraveling">
+        </div>*@
+        Club Traveling: @Model.StudentOrganization <br />
+
+        <!-- Event -->
+        @*<div class="form-group">
+            <label for="event">Event</label>
+            <input type="text" class="form-control" id="event" aria-describedby="event">
+        </div>*@
+        Event: @Model.TripName
+
+        <!-- Destiniation Local/National -->
+        <div class="form-inline">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="destinationType" id="destinationTypeLocal" value="destinationTypeLocal" checked>
+                <label class="form-check-label" for="destinationTypeLocal">Local</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="destinationType" id="destinationTypeNational" value="destinationTypeNational">
+                <label class="form-check-label" for="destinationTypeNational">National</label>
+            </div>
+        </div>
+        <br />
+
+
+        <!-- Destination -->
+        @*<div class="form-group">
+            <label for="destination">Destination</label>
+            <input type="text" class="form-control" id="destination" aria-describedby="destination">
+        </div>*@
+        Destination: <br />
+        @Model.Destination.Name <br />
+        @Model.Destination.AddressLine1 <br />
+        @Model.Destination.City, @Model.Destination.State @Model.Destination.PostalCode<br /> <br />
+
+        <!-- Trip Date TODO: Date picker-->
+        @*<div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="dateDeparting">Date Departing</label>
+                <input type="text" class="form-control" id="dateDeparting">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="dateReturning">Date Returning</label>
+                <input type="text" class="form-control" id="dateReturning">
+            </div>
+        </div>*@
+
+        Departing: @Model.DateDeparting.Value.ToShortDateString()<br />
+        Returning: @Model.DateReturning.Value.ToShortDateString()
+
+        <!-- Trip Time TODO: Time picker-->
+        @*<div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="timeDeparting">Time Departing</label>
+                <input type="text" class="form-control" id="timeDeparting">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="timeReturning">Time Returning</label>
+                <input type="text" class="form-control" id="timeReturning">
+            </div>
+        </div>*@
+
+        <!-- SGA -->
+        <div class="form-group row">
+            <label for="fundSga" class="col-sm-2 col-form-label">SGA</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="fundSga">
+            </div>
+        </div>
+
+        <!-- Club -->
+        <div class="form-group row">
+            <label for="fundClub" class="col-sm-2 col-form-label">Club</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="fundClub">
+            </div>
+        </div>
+
+        <!-- Fundraised -->
+        <div class="form-group row">
+            <label for="fundFundraised" class="col-sm-2 col-form-label">Fundraised</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="fundFundraised">
+            </div>
+        </div>
+
+        <!-- Other -->
+        <div class="form-group row">
+            <label for="fundOther" class="col-sm-2 col-form-label">Other</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="fundOther">
+            </div>
+        </div>
+
+        <!-- Total -->
+        <div class="form-group row">
+            <label for="fundTotal" class="col-sm-2 col-form-label">Total</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="fundTotal" readonly>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-outline-primary">Submit</button>
+        <a asp-action="TripDetail" asp-route-id="@Model.TripId" class="btn btn-outline-secondary">Cancel</a>
+    </form>
+
+    <p>
+        While funds are transferred prior to the academic school year starting, clubs are still expected to pay for only 75% of all basic costs for local/state competitions and up to
+        60% for national competitions. Students and clubs should be fundraising to cover remaining costs.
+
+    </p>
+
+    <!--
+            The form requires three signatures at the bottom:
+            Traveler’s Signature
+            Supervisor’s Signature/Approval
+            Dean or Administrator’s Signature/Approval
+        -->
+</div>

@@ -1,0 +1,221 @@
+﻿@{
+    ViewData["Title"] = "Travel Request Form";
+    Layout = "_Layout";
+}
+
+<div class="jumbotron text-center">
+    <h1></h1>@*@Model.Trip.TripName*@
+    <h2>Travel Request Planning/Authorization Form</h2>
+</div>
+<div class="subNav">
+    <div class="container">
+        <a asp-action="CoordinatorDocsListView" class="btn btn-outline-primary noPrint back-btn"><i class="fas fa-arrow-left"></i> </a>
+        <form method="post">
+            <button type="button" class="btn btn-success noPrint subNav-btn" onclick="print()">Print</button>
+
+        </form>
+
+    </div>
+</div>
+<div class="container">
+    <h5>Professional Improvement (AGENDA REQUIRED WITH EXPENSE REPORT)</h5>
+    <input type="radio" name="profImp" /> In-State - Form OPTIONAL (Department Head Approval for Budget Impacted)<br />
+    <input type="radio" name="profImp" /> Out-of-State - Form REQUIRED (Dean or Administrator Approval)<br />
+    <input type="radio" name="profImp" /> Out-of-Country - Form REQUIRED (Approvals up to President and Board)<br /><br />
+    <h5>Required Travel</h5>
+    <input type="radio" name="req" /> In-State - Form OPTIONAL (Department Head Approval for Budget Impacted)<br />
+    <input type="radio" name="req" /> Out-of-State - Form or Other Written Documentation REQUIRED (Dean or Administrator Approval along with lower level approvals)<br />
+    <input type="radio" name="req" /> Out-of-Country - Form REQUIRED (Approvals up to President and Board)<br /><br />
+
+    Travel Dates/Times:  _______________________________________<br />
+    Traveler:            _______________________________________<br />
+    City: ________________________________    State: ___________<br />
+    Event:               _______________________________________<br />
+    Substitute needed: YES / NO<br />
+    Purpose/Rationale<br /><br />
+
+    *Per Administrative Policy - Human Resources, Conferences & Seminars HUM-401. . ." An employee is required to obtain approval from his/her supervisor prior to attending a conference, seminar, or other professional development activity.  The employee must provide rationale which addresses:  (1) the purpose of the conference, seminar, or other professional development activity, (2) how the learning connects to the employee’s professional/personal development plan, and (3) how the employee plans to share the learning obtained with other pertinent college personnel.  See HUM-401 for more details.  Agenda MUST be attached to the Expense Report.
+    <br /><br />
+          <table>
+              <tr>
+                  <th></th>
+                  <th class="text-center">Estimated Cost<br /><span class="subheader">(Must be completed PRIOR to approval)</span></th>
+                  <th class="text-center">Accounting Information<br /><span class="subheader">Index or Fund/Org/Acct/Prog</span></th>
+                  <th class="text-center">Cash Advance Document #<br /><span class="subheader">(Complete AFTER approval)</span></th>
+              </tr>
+              <tr>
+                  <th class="text-right">Registration/Meeting Costs: </th>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+              </tr>
+              <tr>
+                  <th class="text-right">Air Travel Costs:</th>
+                  <td> <input type="text" class="form-control" /></td>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+              </tr>
+              <tr>
+                  <th class="text-right">Lodging Accomodations:</th>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+              </tr>
+              <tr>
+                  <td class="text-right subheader"> Daily rate (incl.taxes) X # of nights:</td>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+              </tr>
+              <tr>
+                  <th class="text-right"> Meal Costs: </th>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+              </tr>
+              <tr>
+                  <td class="text-right subheader">Must be out of district - overnight:</td>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+              </tr>
+              <tr>
+                  <td class="text-right subheader">No receipts - $8 breakfast, $10 lunch, $20 dinner</td>
+                  <td> <input type="text" class="form-control" ></td>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+              </tr>
+              <tr>
+                  <td class="text-right subheader"> Standard Rate per diem w/receipts or higher rate identified</td>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+              </tr>
+              <tr>
+                  <th class="text-right">Mileage <span class="subheader">(round trip estimate at current rate/mile)</span>:</th>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+              </tr>
+              <tr>
+                  <th class="text-right">Miscellaneous Expenses:</th>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+              </tr>
+              <tr>
+                  <td class="text-right subheader"> Parking ($/per day X # of days):</td>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+              </tr>
+              <tr>
+                  <td class="text-right subheader">Shuttle/Taxi (round trip):</td>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+              </tr>
+              <tr>
+                  <td class="text-right subheader"> Tolls (round trip):</td>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control" ></td>
+              </tr>
+              <tr>
+                  <td class="text-right subheader"> Other:</td>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control"></td>
+                  <td> <input type="text" class="form-control" ></td>
+              </tr>
+              <tr>
+                  <th class="text-right">TOTALS:</th>
+                  <td>$<output id="total"></output></td>
+                  <td>$<output id="total"></output></td>
+                  <td>$<output id="total"></output></td>
+              </tr>
+          </table>
+    <br />
+    <div>
+        <h5>OTHER INFORMATION</h5>
+        <table>
+            <tr>
+                <td>Airline</td>
+                <td>Depart MKE</td>
+                <td>Arrive</td>
+                <td>Depart</td>
+                <td>Return MKE</td>
+            </tr>         
+            <tr>
+                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control"></td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td>Hotel</td>
+                <td>Address</td>
+                <td>City</td>
+                <td>State</td>
+                <td>Zip Code</td>
+            </tr>
+            <tr>
+                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control"></td>
+            </tr>
+            <tr> <td>Phone</td><td>Reservation Confirmation #</td></tr>
+            <tr> <td><input type="text" class="form-control"></td><td><input type="text" class="form-control"></td> </tr>
+        </table>
+
+    </div>
+    <hr />
+    APPROVALS:	(Travel MUST be approved PRIOR to making travel arrangements.  See Policy FIN-250-01)
+    See top of page for required signatures.<br /><br /><br />
+
+    <table>
+        <tr>
+            <td class="col-4">________________________________________________________ </td>
+            <td class="col-2"></td>
+            <td class="col-4">________________________________________________________ </td>
+            <td class="col-2"></td>
+        </tr>
+        <tr>
+            <td class="col-4">Traveler's Signature&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</td>
+            <td class="col-2"></td>
+            <td class="col-4">Department Head/Budget Manager &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date</td>
+            <td class="col-2"></td>
+
+        </tr>
+    </table><br /><br />
+    <table>
+        <tr>
+            <td class="col-4">________________________________________________________ </td>
+            <td class="col-2"></td>
+            <td class="col-4">________________________________________________________ </td>
+            <td class="col-2"></td>
+        </tr>
+        <tr>
+            <td class="col-4">Dean or Administrator&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Date</td>
+            <td class="col-2"></td>
+            <td class="col-4">President&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</td>
+            <td class="col-2"></td>
+        </tr>
+    </table><br /><br />
+
+    
+</div>
+
+<style>
+    .subheader{
+        font-size: 12px;    
+
+    }
+    .form-control{
+        height: 27px;
+    }
+</style>

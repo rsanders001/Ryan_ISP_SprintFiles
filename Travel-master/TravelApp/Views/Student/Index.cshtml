@@ -1,0 +1,204 @@
+@model TravelApp.Models.StudentTripViewModel
+@{
+    ViewData["Title"] = "Student Dashboard";
+    Layout = "_Layout";
+}
+
+<div class="jumbotron text-center">
+    <h1>Welcome, @ViewBag.User.FirstName @ViewBag.User.LastName</h1>
+</div>
+<div class="subNav">
+    <div class="container">
+        @if (ViewBag.TimeSpan <= 112 && ViewBag.DOB != null)
+        {
+            //if time span is less than 16 weeks (one semester) and DOB has been entered
+            <a class="btn btn-outline-primary subNav-btn" asp-controller="Student" asp-action="StudentInfo">Update Profile</a>
+            <i class="text-success lastUpdated">&nbsp;Last Updated: @ViewBag.ModDate.ToShortDateString()</i><br />
+        }
+        else
+        {
+            <a class="btn btn-outline-danger subNav-btn" style="width: 170px;" asp-controller="Student" asp-action="StudentInfo">Update Profile Now!</a>
+            <i class="text-danger lastUpdated">Last Updated: @ViewBag.ModDate.ToShortDateString()</i><br />
+        }
+    </div>
+</div>
+<!-- if the user has applications to trips, list all relevant trips-->
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-12 col-sm-12 mb-6">
+            @{
+                var flag = true;
+
+                @if (Model.Apps.Count() > 0)
+                {
+                    <h3>My Trips</h3>
+                    <table class="table">
+                        <tbody>
+                            @foreach (var app in Model.Apps)
+                            {
+                                @foreach (var trip in Model.Trips)
+                                {
+                                    @if (app.TripId == trip.TripId && DateTime.Compare(((DateTime)(trip.DateDeparting)), DateTime.Today) > 0)
+                                    {
+                                        flag = false;
+                                        <tr>
+                                            <td>
+                                                @{
+
+                                                    int cnt = 0;
+                                                    int approved = 0;
+                                                    int denied = 0;
+                                                    int unsubmitted = 0;
+                                                    bool progress = false;
+
+                                                    @foreach (var form in Model.ApplicationForms.Where(af => af.ApplicationId == app.ApplicationId))
+                                                    {
+                                                        @switch (form.FormStatusId)
+                                                        {
+                                                            // No Data Filled out
+                                                            case 1:
+                                                                cnt++;
+                                                                unsubmitted++;
+                                                                break;
+                                                            // Pending
+                                                            case 2:
+                                                                cnt++;
+                                                                progress = true;
+                                                                break;
+                                                            // Approved
+                                                            case 3:
+                                                                cnt++;
+                                                                approved++;
+                                                                break;
+                                                            // Denied
+                                                            case 4:
+                                                                cnt++;
+                                                                denied++;
+                                                                break;
+
+                                                        }
+
+                                                    }
+
+                                                    @if (unsubmitted > 0)
+                                                    {
+                                                        <i class="text-warning" data-toggle="tooltip" data-placement="top" title="Action Needed!"><i class="fas fa-exclamation-circle"></i></i>
+                                                    }
+                                                    else if (denied > 0)
+                                                    {
+                                                        <i class="text-danger" data-toggle="tooltip" data-placement="top" title="One or more forms rejected: redo and turn in to coordinator"><i class="fas fa-ban"></i></i>
+                                                    }
+                                                    else if (progress)
+                                                    {
+                                                        <i class="text-primary" data-toggle="tooltip" data-placement="top" title="Waiting for Coordinator Form Approvals"><i class="fas fa-spinner"></i></i>
+                                                    }
+
+                                                    else if (approved == 3)
+                                                    {
+                                                        <i class="text-success" data-toggle="tooltip" data-placement="top" title="All Forms Approved"><i class="fas fa-check"></i></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-danger">Status Not working</span>
+                                                    }
+                                                    @try
+                                                    {
+
+                                                        @if ((Model.Payment.FirstOrDefault(p => p.TripId == app.TripId).PaymentConfirmed) == true)
+                                                        {
+                                                            <i class="text-success" data-toggle="tooltip" data-placement="top" title="Payment Approved"><i class="fas fa-dollar-sign"></i></i>
+                                                        }
+                                                        else
+                                                        {
+                                                            <i class="text-danger" data-toggle="tooltip" data-placement="top" title="Payment not yet approved"><i class="fas fa-dollar-sign"></i></i>
+                                                        }
+                                                    }
+                                                    catch
+                                                    {
+                                                        <i class="text-danger" data-toggle="tooltip" data-placement="top" title="Payment not yet approved"><i class="fas fa-dollar-sign"></i></i>
+                                                    }
+                                                }
+
+                                                &nbsp;&nbsp;
+                                                <a asp-action="AcceptedTripDetail" asp-route-id="@app.ApplicationId">@trip.TripName</a>
+                                            </td>
+                                            <td> <i>@trip.DateDeparting.Value.ToShortDateString()–@trip.DateReturning.Value.ToShortDateString()</i></td>
+                                        </tr>
+                                    }
+
+                                }
+                            }
+
+                        </tbody>
+
+                    </table>
+                }
+
+                if (flag)
+                {
+                    <h3>My Trips</h3>
+                    <h5> You have not applied to any trips yet</h5>
+                    <p><i> Get started by clicking on an Available Trip below to apply!</i></p><br />
+                }
+            }
+        </div>
+        <div class="col-md-12 col-sm-12 mb-6">
+            <!-- list all trips the user has not applied to -->
+            <h3>Available Trips</h3>
+            <ul class="bulletLess">
+                @{
+                    var tripCount = 0;
+                    foreach (var trip in Model.Trips)
+                    {
+                        if (Model.Apps.Count() > 0) //check for applications
+                        {
+                            var count = 0;
+                            foreach (var app in Model.Apps)
+                            {
+                                if (app.TripId != trip.TripId)
+                                {
+                                    count++; //if no matching apps were found, increment count
+                                }
+                                else //if match was found, set count to 0 and break
+                                {
+                                    count = 0;
+                                    break;
+                                }
+                            }
+                            if (count > 0 && DateTime.Compare(((DateTime)(trip.DateDeparting)), DateTime.Today) > 0) //output only if no matching applications for this trip were found
+                            {
+                                <li>
+                                    <a asp-action="TripDetail" asp-route-id="@trip.TripId">@trip.TripName</a>
+                                </li>
+                                tripCount++;
+                            }
+                            count = 0;
+                        }
+                        else //otherwise, just print out all trips
+                        {
+                            if (DateTime.Compare(((DateTime)trip.DateDeparting), DateTime.Today) > 0)
+                            {
+                                <li>
+                                    <a asp-action="TripDetail" asp-route-id="@trip.TripId">@trip.TripName</a>
+                                </li>
+                                tripCount++;
+                            }
+                        }
+                    }
+                    if (tripCount == 0)
+                    {
+                        <li>No trips yet</li>
+
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+        $(document).ready(function(){
+          $('[data-toggle="tooltip"]').tooltip();
+        });
+</script>

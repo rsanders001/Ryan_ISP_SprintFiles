@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "RentalCarPreapprovalForm";
+    Layout = "_Layout";
+}
+<div class="jumbotron text-center">
+    <h2>Rental Vehicle Pre-Approval Form</h2>
+</div>
+<div class="subNav">
+    <div class="container">
+        <a asp-action="CoordinatorDocsListView" class="btn btn-outline-primary noPrint back-btn"><i class="fas fa-arrow-left"></i> </a>
+        <form method="post">
+            <button type="button" class="btn btn-success noPrint subNav-btn" onclick="print()">Print</button>
+
+        </form>
+
+    </div>
+</div>
+<div class="container">
+    <p>
+        Per FIN-250-01, Travel Expense Reimbursement Procedure, pre-approval to rent a vehicle is needed from the employee’s supervisor and the appropriate dean or administrator. Pre-approval to rent a vehicle for field trips is also required.<br />
+
+        When traveling from WCTC you must use the College’s current vehicle rental vendor, which is Enterprise Rental. Information about Enterprise vehicle rentals is located on the Portal under the Resources Tab. If you are renting a vehicle for other transportation purposes, you must select the car insurance option offered by the car rental agency.<br />
+
+        Written authorization, detailed below, is required to be attached to the reconciling expense report.  You may use this form at your convenience; however, it is an optional alternative form of written authorization.<br />
+    </p>
+    <p>Reason and Cost Justification for Vehicle Rental:</p>
+
+    <textarea class="form-control" rows="5" id="reason"></textarea>
+    <br />
+
+    <table>
+        <tr>
+            <th>Type of Vehicle</th>
+            <th>&nbsp;&nbsp;</th>
+            <th></th>
+            <th class="text-left"> Date(s) of Vehicle Rental	</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr>
+            <td> <input type="radio" name="v" /> Car </td>
+            <td><input type="radio" name="v" /> Van (12 Passenger Max) </td>
+            <td> &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; </td>
+            <td><input class="form-control" type="date" /></td>
+            <td>&nbsp;&nbsp;</td>
+            <td>— &nbsp;</td>
+            <td><input class="form-control" type="date" /></td>
+        </tr>
+    </table>
+    <br />
+
+    Driver(s):	<input class="form-control" type="text" /><br />
+
+    Passenger(s):<input class="form-control" type="text" /><br />
+
+
+    Estimated Costs:<input class="form-control" type="number" /><br />
+    <br /><br />
+    <table>
+        <tr>
+            <td>_________________________________________________&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;_________________________________________________&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;_________________________________________________</td>
+        </tr>
+        <tr>
+            <td><i>Traveler's Signature</i>&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;<i>Supervisor’s Signature</i>&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;<i>Dean or Administrator’s Signature</i></td>
+        </tr>
+    </table>
+</div>

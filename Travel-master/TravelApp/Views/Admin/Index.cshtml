@@ -1,0 +1,138 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using TravelApp.Models
+@inject UserManager<Models.AppUser> UserManager
+@model IEnumerable<AppUser>
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "_Layout";
+}
+
+<div class="jumbotron text-center">
+    <h1>Welcome, @ViewBag.User.FirstName @ViewBag.User.LastName</h1>
+    <h2>User Accounts</h2>
+</div>
+<div class="subNav">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 col-sm-12 mb-5">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+                    </div>
+                    <input class="form-control subNav-btn" type="text" id="searchInput" onkeyup="searchFunction()" placeholder="Search names...">
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+            <div class="col-md-6 col-sm-12 mb-5">
+                <a class="btn btn-outline-primary subNav-btn" asp-action="Create">Create User</a>
+                <a class="btn btn-outline-primary subNav-btn" asp-controller="RoleAdmin" asp-action="Index">Roles</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+
+        <div class="table-responsive">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <table class="table table-sm table-striped table-hover" id="nameTable">
+                <tr>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">WCTC ID</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                @if (Model.Count() == 0)
+                {
+                    <tr><td colspan="3" class="text-center">No User Accounts</td></tr>
+                }
+                else
+                {
+                    foreach (AppUser user in Model)
+                    {
+                        <tr>
+                            <td>@user.FirstName</td>
+                            <td>@user.LastName</td>
+                            <td>@user.WctcID</td>
+                            <td>@user.Email</td>
+                            <td>
+                                <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@user.Id">Edit</a>
+                                <button class="btn btn-sm btn-danger" data-record-id="@user.Id" data-record-title="@user.FirstName @user.LastName" data-toggle="modal" data-target="#confirm-delete">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+
+        <!-- confirm delete modal -->
+        <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="Confirm Delete" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="confirmDelete">Confirm Delete</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>You are about to delete <b><i class="title"></i>'s</b> account, this procedure is irreversible.</p>
+                        <p>Do you want to proceed?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-danger btn-ok">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function searchFunction() {
+            // Declare variables
+            var input, filter, table, tr, tdFname, tdLname, i, fNameValue, lNameValue, fullNameValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            filter = filter.split(' ').join(''); //remove spaces
+            table = document.getElementById("nameTable");
+            tr = table.getElementsByTagName("tr");
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 0; i < tr.length; i++) {
+                tdFname = tr[i].getElementsByTagName("td")[0]; //1st td in table row, which is first name
+                tdLname = tr[i].getElementsByTagName("td")[1] //2nd td in table row, which is last name
+                if (tdFname && tdLname) {
+                    fNameValue = tdFname.textContent || tdFname.innerText;
+                    lNameValue = tdLname.textContent || tdLname.innerText;
+                    fullNameValue = fNameValue + lNameValue;
+
+                    if (fNameValue.toUpperCase().indexOf(filter) > -1 || lNameValue.toUpperCase().indexOf(filter) > -1 || fullNameValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    }
+                    else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        // Bind click to OK button within popup
+        $('#confirm-delete').on('click', '.btn-ok', function (e) {
+
+            var $modalDiv = $(e.delegateTarget);
+            var id = $(this).data('recordId');
+
+            $modalDiv.addClass('loading');
+            $.post('/Admin/Delete/' + id).then(function () {
+                $modalDiv.modal('hide').removeClass('loading');
+                window.location.reload(true);
+            });
+        });
+
+        // Bind to modal opening to set necessary data properties to be used to make request
+        $('#confirm-delete').on('show.bs.modal', function (e) {
+            var data = $(e.relatedTarget).data();
+            $('.title', this).text(data.recordTitle);
+            $('.btn-ok', this).data('recordId', data.recordId);
+        });
+    </script>

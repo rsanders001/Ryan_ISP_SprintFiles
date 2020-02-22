@@ -1,0 +1,45 @@
+﻿@using TravelApp.Models
+@model CreateModel
+
+@{
+    ViewData["Title"] = "Create User";
+    Layout = "_Layout";
+}
+
+<div class="jumbotron text-center">
+    <h1>Create User</h1>
+</div>
+<div class="subNav">
+    <div class="container">
+        <a class="btn btn-outline-primary back-btn" asp-action="Index"> <i class="fas fa-arrow-left"></i> </a>
+    </div>
+</div>
+
+<div class="container">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <form asp-action="Create" method="post">
+        <div class="form-group">
+            <label asp-for="FirstName"></label>
+            <input asp-for="FirstName" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="LastName"></label>
+            <input asp-for="LastName" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="WctcID">WCTC ID Number</label>
+            <input asp-for="WctcID" class="form-control" />
+            <span asp-validation-for="WctcID" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Password"></label>
+            <input asp-for="Password" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-outline-primary">Create</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+    </form>
+</div>

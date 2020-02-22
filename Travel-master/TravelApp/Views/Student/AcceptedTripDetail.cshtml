@@ -1,0 +1,147 @@
+@using TravelApp.Models
+@model SignatureFormViewModel
+@{
+    ViewData["Title"] = "Accepted Trip Detail";
+    Layout = "_Layout";
+}
+
+<div class="jumbotron text-center">
+    <h1>@Model.Trip.TripName</h1>
+</div>
+<div class="subNav">
+    <div class="container">
+        <a asp-action="Index" class="btn btn-outline-primary back-btn"><i class="fas fa-arrow-left"></i> </a>
+        @if (@Model.Payment == null)
+        {
+            <a asp-action="DropTrip" asp-route-id="@Model.Application.ApplicationId" class="btn btn-danger subNav-btn">Drop Trip</a>
+        }
+        else if (Model.Payment.PaymentConfirmed == true)
+        {
+            <span class="approved lastUpdated">
+                <i class="form-list-item text-success"><i class="fas fa-check"></i> Process Completed</i>
+            </span>
+        }
+        else
+        {
+            <span class="lastUpdated">
+                <i class="form-list-item text-primary"><i class="fas fa-spinner"></i> Pending Completion</i>
+            </span>
+        }
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-sm-12 mb-5">
+            <h3>Details</h3>
+            <i><strong>Destination: </strong>@Model.Destination.Name</i><br />
+            <i><strong>Departing: </strong>@Model.Trip.DateDeparting.Value.ToShortDateString()</i><br />
+            <i><strong>Returning: </strong>@Model.Trip.DateReturning.Value.ToShortDateString()</i><br />
+            <i><strong>Objective: </strong>@Model.Trip.EducationalObjective</i><br />
+            <i><strong>Coordinator: </strong>@ViewBag.Coordinator.FirstName @ViewBag.Coordinator.LastName</i><br />
+            <i><strong>Phone: </strong><a href="tel:@ViewBag.Coordinator.PhoneNumber">@ViewBag.Coordinator.PhoneNumber</a></i><br />
+            <i><strong>Email: </strong><a href="mailto:@ViewBag.Coordinator.Email">@ViewBag.Coordinator.Email</a></i><br />
+            <i><strong>Student Organization: </strong> @Model.Trip.StudentOrganization </i>
+
+            <br /><br />
+        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div class="col-md-5 col-sm-12 mb-5">
+            <h3>To-Do</h3>
+            <p><i class="fas fa-print"></i>&nbsp; Print the required forms below</p>
+            @foreach (ApplicationForms form in Model.AppFormList)
+            {
+                switch (form.FormId)
+                {
+                    case 1:
+                        {
+                            @if (form.FormStatusId == 1)
+                            {
+                                <i class="form-list-item text-warning"><i class="fas fa-exclamation-circle"></i><a asp-action="StandardModelReleaseForm" asp-route-id="@form.ApplicationFormId" class="text-warning"> Standard Model Release Form</a></i><br />
+                            }
+                            else if (form.FormStatusId == 4)
+                            {
+                                <i class="form-list-item text-danger"><i class="fas fa-ban"></i><a asp-action="StandardModelReleaseForm" asp-route-id="@form.ApplicationFormId" class="text-danger"> Standard Model Release Form</a></i><br />
+                            }
+                            else if (form.FormStatusId == 3)
+                            {
+                                <i class="form-list-item text-success"><i class="fas fa-check"></i> Standard Model Release Form</i><br />
+                            }
+                            else
+                            {
+                                <i class="form-list-item text-primary"><i class="fas fa-spinner"></i><a asp-action="StandardModelReleaseForm" asp-route-id="@form.ApplicationFormId" class="text-primary"> Standard Model Release Form</a></i><br />
+                            }
+                            break;
+                        }
+                    case 2:
+                        { @if (form.FormStatusId == 1)
+                            {
+                                <i class="form-list-item text-warning"><i class="fas fa-exclamation-circle"></i><a asp-action="CodeOfConductForm" asp-route-id="@form.ApplicationFormId" class="text-warning"> Code of Conduct Form</a></i><br />
+                            }
+                            else if (form.FormStatusId == 4)
+                            {
+                                <i class="form-list-item text-danger"><i class="fas fa-ban"></i><a asp-action="CodeOfConductForm" asp-route-id="@form.ApplicationFormId" class="text-danger"> Code of Conduct Form</a></i><br />
+                            }
+                            else if (form.FormStatusId == 3)
+                            {
+                                <i class="form-list-item text-success"><i class="fas fa-check"></i> Code of Conduct Form</i><br />
+                            }
+                            else
+                            {
+                                <i class="form-list-item text-primary"><i class="fas fa-spinner"></i><a asp-action="CodeOfConductForm" asp-route-id="@form.ApplicationFormId" class="text-primary"> Code of Conduct Form</a></i><br />
+                            }
+                        break;
+                    }
+                case 3:
+                    {
+                        @if (form.FormStatusId == 1)
+                        {
+                            <i class="form-list-item text-warning"><i class="fas fa-exclamation-circle"></i><a asp-action="ReleaseOfLiabilityForm" asp-route-id="@form.ApplicationFormId" class="text-warning"> Release of Liability Form</a></i><br />
+                        }
+                        else if (form.FormStatusId == 4)
+                        {
+                            <i class="form-list-item text-danger"><i class="fas fa-ban"></i><a asp-action="ReleaseOfLiabilityForm" asp-route-id="@form.ApplicationFormId" class="text-danger"> Release of Liability Form</a></i><br />
+                        }
+                        else if (form.FormStatusId == 3)
+                        {
+                            <i class="form-list-item text-success"><i class="fas fa-check"></i> Release of Liability Form</i><br />
+                        }
+                        else
+                        {
+                            <i class="form-list-item text-primary"><i class="fas fa-spinner"></i><a asp-action="ReleaseOfLiabilityForm" asp-route-id="@form.ApplicationFormId" class="text-primary"> Release of Liability Form</a></i><br />
+                        }
+                        break;
+                    }
+            }
+        }<br>
+            <p><i class="fas fa-signature"></i>&nbsp; Sign the forms </p>
+            <p><i class="fas fa-inbox"></i>&nbsp;&nbsp;  Deliver the signed forms to @ViewBag.Coordinator.FirstName @ViewBag.Coordinator.LastName </p>
+            <p><i class="far fa-money-bill-alt"></i>&nbsp; Deliver payment to @ViewBag.Coordinator.FirstName @ViewBag.Coordinator.LastName once approved</p>
+            <p><i class="fas fa-mouse-pointer"></i>&nbsp;&nbsp;&nbsp;   Verify all deliveries by clicking the button below</p>
+
+
+            @if (@Model.Payment == null)
+            {
+
+                <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a asp-action="Paid" asp-route-id="@Model.Application.ApplicationId" class="btn btn-outline-primary btn-sm">Deliveries Complete</a></span>
+            }
+            else if (Model.Payment.PaymentConfirmed == true)
+            {
+                <div class="approved" style="text-align: center; text-indent: -40px">
+                    <i class="text-success" data-toggle="tooltip" data-placement="right" title="Forms and Payment Submissions Complete and Approved"><i class="fas fa-check fa-3x"></i></i> <!--Form and Payment Submissions Complete-->
+</div>
+            }
+            else
+            {
+                <div style="text-align: center; text-indent: -40px">
+                   <i class="text-primary" data-toggle="tooltip" data-placement="right" title="Waiting on Coordinator Approval"> <i class="fas fa-spinner fa-3x"></i></i> <!--Waiting on coordinator approval-->
+</div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>

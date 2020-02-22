@@ -1,0 +1,127 @@
+﻿@model TravelApp.Models.SignatureFormViewModel
+@{
+    ViewData["Title"] = "Code of Conduct Form";
+    Layout = "_Layout";
+}
+
+<div class="jumbotron text-center yesPrint">
+    <h1>@Model.Trip.TripName</h1>
+    <h2>CODE OF CONDUCT FORM</h2>
+</div>
+<form method="post">
+    <div class="subNav">
+        <div class="container">
+
+            <a asp-action="AcceptedTripDetail" asp-route-id="@Model.AppForm.ApplicationId" class="btn btn-outline-primary noPrint back-btn"><i class="fas fa-arrow-left"></i> </a>
+
+            <button type="submit" asp-action="PrintFormSubmit" asp-route-id="@Model.AppForm.ApplicationFormId" onclick="print()" class="btn btn-outline-primary noPrint subNav-btn">Print & Submit</button>
+        </div>
+    </div>
+    <div class="container yesPrint">
+        <p>All students are expected to follow the Student Code of Conduct found in the Student Handbook.  The following rules and regulations also apply to all WCTC students participating in extracurricular travel that is either sponsored or co-sponsored by a recognized WCTC student organization, or in which the name of the college is used in conjunction with the event.</p>
+        <ol>
+            <li class="cocListItem">Participants behavior traveling to or from, or during the event, should be such that it reflects credit to the group/organization, the school and the individual at all times. This also applies to participants’ conduct during social activities or at times when no formal activities or meetings are scheduled, such as late evening and early morning hours.</li>
+            <li class="cocListItem">Participants are expected to refrain from taking positions that are contrary to or in conflict with the interest and/or positions of the group, or detrimental to the group’s event aims and purposes.</li>
+            <li class="cocListItem">Identification badges will be worn by each participant at all times as required.</li>
+            <li class="cocListItem">Participants will dress appropriately for each situation (e.g., no casual clothing at formal get-togethers and banquets).</li>
+            <li class="cocListItem">Participants are expected to attend ALL business meetings, workshops, and other scheduled event programs, including scheduled social events. Please be prompt and prepared for all sessions.</li>
+            <li class="cocListItem">Participants are to report any accidents, injuries, or illness to the adviser or head delegate immediately.</li>
+            <li class="cocListItem">Alcoholic beverage consumption will not be tolerated at any official event/program.</li>
+            <li class="cocListItem">The use and/or possession of illegal drugs will not be tolerated.</li>
+            <li class="cocListItem">Participants responsible for theft and/or vandalism to properties during the course of an event will be held financially liable and will be subject to disciplinary action.</li>
+            <li class="cocListItem">Any long distance telephone calls, charges to the room, or other personal expenses will be the responsibility of the individual participant.</li>
+            <li class="cocListItem">Participants should stay on conference/hotel property unless specifically given permission by the group advisor to leave the site.</li>
+        </ol>
+        <p>The advisor(s) to the student organization or group participating in the extracurricular travel that accompanies the group shall have total authority over the supervision of the event and its participants. <u>This dictates that all student participants must adhere to and abide by the advisor’s decisions and judgments and afford him/her the common courtesy and respect due by virtue of his/her position as the official representative of Waukesha County Technical College.</u> In the absence of an advisor, the head student delegate will act as the official representative and spokesperson.<br /></p>
+        <p>Participants who disregard or violate these rules may be subject to disciplinary action through the Student Life Office.</p>
+        <br />
+
+        <div class="yesPrint">
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" name="ofAge" id="ofAge" onclick="adultAge()" />
+                <label for="ofAge" class="form-check-label">I am at least 18 years of age.</label>
+            </div>
+            <label> __________ I have read the Code of Conduct for Extracurricular Travel Form and agree to abide by these established rules</label>
+
+            <div class="row">
+                <div class="col-md-6 col-sm-12 mb-5">
+                    <div class="table-responsive">
+                        <table class="table table-sm borderless">
+                            <thead>
+                                <tr class="d-flex">
+                                    <th class="col-4"><u>Student</u></th>
+                                    <td class="col-8">WCTCID @ViewBag.User.WctcID</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="d-flex">
+                                    <th class="col-4">Name:</th>
+                                    <td class="col-8">@ViewBag.User.FirstName @ViewBag.User.LastName</td>
+                                </tr>
+                                <tr class="d-flex">
+                                    <th class="col-4">Signature:</th>
+                                    <td class="col-8" style="border-bottom: solid thin !important;"></td>
+                                </tr>
+                                <tr class="d-flex">
+                                    <th class="col-4">Date:</th>
+                                    <td class="col-8">@ViewBag.Today</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-12 mb-5" id="adultSig">
+                    <div class="table-responsive">
+                        <table class="table table-sm borderless">
+                            <thead>
+                                <tr class="d-flex">
+                                    <th class="col-4"><u>Parent / Guardian</u></th>
+                                    <td class="col-8">Required if under 18</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="d-flex">
+                                    <th class="col-4">Print Name:</th>
+                                    <td class="col-8" style="border-bottom: solid thin !important;"></td>
+                                </tr>
+                                <tr class="d-flex">
+                                    <th class="col-4">Signature:</th>
+                                    <td class="col-8" style="border-bottom: solid thin !important;"></td>
+                                </tr>
+                                <tr class="d-flex">
+                                    <th class="col-4">Date:</th>
+                                    <td class="col-8">@ViewBag.Today</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <p class="font-weight-bold noPrint">
+                Please print this document and deliver the signed physical copy to your trip's coordinator.
+            </p>
+        </div>
+    </div>
+</form>
+
+
+<script>
+    //function for toggling adult signature field
+    function adultAge() {
+        // Get the checkbox
+        var ofAge = document.getElementById("ofAge");
+        // Get the div to display
+        var adultSig = document.getElementById("adultSig");
+
+        // If the checkbox is checked, display the output div and change classes
+        if (ofAge.checked == true) {
+            adultSig.style.display = "none";
+            adultSig.className = "col-md-6 col-sm-12 mb-5 font-weight-bold noPrint";
+        }
+        else {
+            adultSig.style.display = "block";
+            adultSig.className = "col-md-6 col-sm-12 mb-5 font-weight-bold yesPrint";
+        }
+    }
+</script>
